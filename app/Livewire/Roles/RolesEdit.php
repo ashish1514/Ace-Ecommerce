@@ -3,9 +3,9 @@
 namespace App\Livewire\Roles;
 
 use Livewire\Component;
-use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\{Permission,Role};
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Str;
 
 class RolesEdit extends Component
 {
@@ -40,6 +40,12 @@ class RolesEdit extends Component
 
     public function render()
     {
-        return view('livewire.roles.roles-edit');
+        $groupedPermissions = $this->allPermissions->groupBy(function ($permission) {
+            return Str::before($permission->name, ' ');
+        });
+
+        return view('livewire.roles.roles-edit', [
+            'groupedPermissions' => $groupedPermissions,
+        ]);
     }
 }

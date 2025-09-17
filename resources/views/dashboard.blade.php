@@ -1,15 +1,15 @@
 <x-layouts.app :title="__('Dashboard')">
     <div class="flex h-full w-full flex-1 flex-col gap-4 rounded-xl">
        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-            <div class="rounded-lg  dark:bg-gray-900 p-4 border-t-2 border-blue-300 shadow-sm border border-neutral-200">
+            <div class="rounded-lg dark:bg-gray-900 p-4 border-t-2 border-blue-300 shadow-sm border border-neutral-200">
                 <p class="text-sm text-gray-900">Total Users</p>
-                <p class="text-2xl font-semibold text-sm text-gray-900">47</p>
+                <p class="text-2xl font-semibold text-gray-900">{{ $totalUsers }}</p>
             </div>
+                <div class="rounded-lg dark:bg-gray-900 p-4 border-t-2 border-green-300 shadow-sm border border-neutral-200">
+                    <p class="text-sm text-gray-900">Total Products</p>
+                    <p class="text-2xl font-semibold text-gray-900">{{ $totalProducts }}</p>
+                </div>
 
-            <div class="rounded-lg  dark:bg-gray-900 p-4 border-t-2 border-blue-300 shadow-sm border border-neutral-200">
-                <p class="text-sm text-gray-900">Total Booking Templates</p>
-                <p class="text-2xl font-semibold text-sm text-gray-900">25</p>
-            </div>
             <div class="rounded-lg  dark:bg-gray-900 p-4 border-t-2 border-blue-300 shadow-sm border border-neutral-200">
                 <p class="text-sm text-gray-900">Total Services</p>
                 <p class="text-2xl font-semibold text-sm text-gray-900">12</p>
@@ -27,6 +27,7 @@
                             <th scope="col" class="px-6 py-3">Name</th>
                             <th scope="col" class="px-6 py-3">Email</th>
                             <th scope="col" class="px-6 py-3">Roles</th>
+                            <!-- <th scope="col" class="px-6 py-3">Action</th> -->
                         </tr>
                     </thead>
                     <tbody>
@@ -42,6 +43,13 @@
                                         @endforeach
                                     </div>
                                 </td>
+                                <td class="px-6 py-2">
+                            <!-- <div class="flex space-x-2">
+                              @can('role.show') <a href="{{ route('roles.show', $role->id) }}" class="bg-green-500 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg mr-2">Show</a>@endcan
+                                @can('role.edit')<a href="{{ route('roles.edit', $role->id) }}" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg mr-2">Edit</a>@endcan
+                                @can('role.delete')<button wire:click="delete({{ $role->id }})" type="submit" wire:confirm="Are you sure to remove this user?" class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg">Delete</button>@endcan
+                            </div> -->
+                        </td>
                             </tr>
                         @empty
                             <tr>

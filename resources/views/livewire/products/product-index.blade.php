@@ -2,39 +2,31 @@
     <div class="relative mb-6 w-full">
         <flux:heading size="xl" level="1">{{ __('Products') }}</flux:heading>
         <flux:subheading size="lg" class="mb-6">{{ __('Manage all your products') }}</flux:subheading>
-        <flux:separator variant="subtle" />
+         @can('Product Add')
+        <flux:button variant="primary" href="{{ route('products.create') }}">Create Products</flux:button>
+        @endcan        
     </div>
-    @if (session('success'))
-        <div class="mb-4 rounded-md bg-green-100 border border-green-400 text-green-700 px-4 py-3" style="background: #00a63e;" color="green">
-            {{ session('success') }}
-        </div>
-    @endif
-    @can('product.create')
-    <flux:button variant="primary" href="{{ route('products.create') }}">Create Products</flux:button>
-    @endcan
     <div class="overflow-x-auto mt-6">
-        <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+        <table id="myCustomTable" class="text-black">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
-                    <th scope="col" class="px-6 py-3">ID</th>
-                    <th scope="col" class="px-6 py-3">Name</th>
-                    <th scope="col" class="px-6 py-3">Details</th>
-                    <th scope="col" class="px-6 py-3">Action</th>
+                    <th scope="col">ID</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Details</th>
+                    <th scope="col">Action</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach($products as $product)
-                    <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800">
-                        <td class="px-6 py-2 text-gray-900 dark:text-white">{{ $product->id }}</td>
-                        <td class="px-6 py-2 text-gray-600 dark:text-gray-300">{{ $product->name }}</td>
-                        <td class="px-6 py-2 text-gray-600 dark:text-gray-300">{{ $product->detail }}</td>
+                    <tr class="odd:bg-white">
+                        <td class="px-6 text-black">{{ $product->id }}</td>
+                        <td class="px-6 text-black">{{ $product->name }}</td>
+                        <td class="px-6 text-black">{{ $product->detail }}</td>
                         <td class="px-6 py-2 flex space-x-2">
-                       @can('product.show')<a href="{{ route('products.show', $product->id) }}" class="bg-green-500 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg mr-2">Show</a>@endcan
-                        @can('product.edit')<a href="{{ route('products.edit', $product->id) }}" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg mr-2">Edit</a>@endcan
-                        @can('product.delete')<button wire:click="delete({{ $product->id }})" type="submit" wire:confirm="Are you sure to remove this user?" class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg">Delete</button>@endcan
-                            
+                        @can('Product Show')<a href="{{ route('products.show', $product->id) }}" class="bg-green-500 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg mr-2">Show</a>@endcan
+                        @can('Product Edit')<a href="{{ route('products.edit', $product->id) }}" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg mr-2">Edit</a>@endcan
+                        @can('Product Delete')<button onclick="confirmDelete({{ $product->id }})" class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg">Delete</button>@endcan 
                         </form>
-
                         </td>
                     </tr>
                 @endforeach
@@ -50,3 +42,42 @@
         </table>
     </div>
 </div>
+<script>
+    $(document).ready(function() {
+        $('#myCustomTable').DataTable({
+            columns: [
+                { data: 'id', name: 'id' },
+                { data: 'name', name: 'name' },
+                { data: 'detail', name: 'detail' },
+                { data: 'action', name: 'action', orderable: true, searchable: true }
+            ]
+        });
+    });
+    function confirmDelete(productId) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You are about to delete ",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#e3342f',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                @this.call('delete', productId);
+            }
+        });
+    }
+
+    document.addEventListener('livewire:userDeleted', (event) => {
+        Swal.fire({
+            toast: true,
+            position: 'top-end',
+            icon: 'success',
+            title: event.detail.userName + ' deleted successfully',
+            showConfirmButton: false,
+            timer: 3000
+        });
+    });
+</script>
+

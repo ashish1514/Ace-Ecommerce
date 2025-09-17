@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Models\Product;
+
 
 class SwitchUserController extends Controller
 {
@@ -34,6 +36,9 @@ class SwitchUserController extends Controller
     public function dashboard()
     {
         $users = User::all();
-        return view('dashboard',compact('users'));
+        $totalUsers = $users->count();
+        $totalProducts = Product::count();
+        return view('dashboard', compact('users', 'totalUsers', 'totalProducts'));
     }
+
 }

@@ -15,22 +15,22 @@
                 <flux:navlist.group :heading="__('Platform')" class="grid">
                     
                 <flux:navlist.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>{{ __('Dashboard') }}</flux:navlist.item>    
-                @if(auth()->user()->can('user.show') ||
-                    auth()->user()->can('user.create') ||
-                    auth()->user()->can('user.edit') ||
-                    auth()->user()->can('user.delete'))
+                @if(auth()->user()->can('User Add') ||
+                    auth()->user()->can('User Edit') ||
+                    auth()->user()->can('User Delete') ||
+                    auth()->user()->can('User Show'))
                     <flux:navlist.item icon="users" :href="route('users.index')" :current="request()->routeIs('users.index')" wire:navigate>{{ __('Users') }}</flux:navlist.item>
                    @endif
-                    @if(auth()->user()->can('role.show') ||
-                    auth()->user()->can('role.create') ||
-                    auth()->user()->can('role.edit') ||
-                    auth()->user()->can('role.delete'))
+                    @if(auth()->user()->can('Role Add') ||
+                    auth()->user()->can('Role Edit') ||
+                    auth()->user()->can('Role Delete') ||
+                    auth()->user()->can('Role Show'))
                     <flux:navlist.item icon="link-slash" :href="route('roles.index')" :current="request()->routeIs('roles.index')" wire:navigate>{{ __('Roles') }}</flux:navlist.item>
                     @endif
-                    @if(auth()->user()->can('product.show') ||
-                    auth()->user()->can('product.create') ||
-                    auth()->user()->can('product.edit') ||
-                    auth()->user()->can('product.delete'))
+                    @if(auth()->user()->can('Product Add') ||
+                    auth()->user()->can('Product Edit') ||
+                    auth()->user()->can('Product Delete') ||
+                    auth()->user()->can('Product Show'))
                     <flux:navlist.item icon="list-bullet" :href="route('products.index')" :current="request()->routeIs('products.index')" wire:navigate>{{ __('Products') }}</flux:navlist.item>
                     @endif
                 </flux:navlist.group>

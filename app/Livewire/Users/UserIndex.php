@@ -17,7 +17,7 @@ class UserIndex extends Component
         $user = User::find($id);
         $user->delete();
         session()->flash("success", "User deleted successfully");
+        $this->dispatch('userDeleted', userName: $user->name);
         return redirect()->route('users.index');
-        
     }
 }
