@@ -13,12 +13,14 @@ class RolesEdit extends Component
     public $name;
     public $permissions = [];
     public $allPermissions = [];
+    public $status = [];
 
     public function mount($id)
     {
         $this->role = Role::find($id);
         $this->allPermissions = Permission::all();
         $this->name = $this->role->name;
+        $this->status = $this->role->status;
         $this->permissions = $this->role->permissions()->pluck("name")->toArray();
     }
 
@@ -30,6 +32,7 @@ class RolesEdit extends Component
         ]);
 
         $this->role->name = $this->name;
+        $this->role->status = $this->status;
         $this->role->save();
 
         $this->role->syncPermissions($this->permissions);

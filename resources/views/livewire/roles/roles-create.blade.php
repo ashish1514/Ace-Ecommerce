@@ -7,14 +7,16 @@
 
     <flux:button variant="primary" href="{{ route('roles.index') }}" color="red">Back</flux:button>
 
-    <div class="w-150" x-data="permissionManager(@entangle('permissions'))">
-        <form wire:submit.prevent="submit" class="mt-6 space-y-6">
-            <flux:input wire:model="name" label="Name" />
+    <div class="w-150" x-data="permissionManager(@entangle('permissions'))" x-init="updateSelectAllCheckbox()">
+        <form wire:submit.prevent="submit" class="mt-6 space-y-6" autocomplete="off">
+
+            <flux:input wire:model.defer="name" label="Name" id="name" required />
+            @error('name') <div class="text-red-600 mt-1">{{ $message }}</div> @enderror
 
             <flux:checkbox.group wire:model="permissions" label="Permissions">
                 <div class="mb-4">
                     <input type="checkbox" id="selectAll" @change="toggleAll($event)">
-                    <label for="selectAll"><strong>Select All Permissions</strong></label>
+                    <label for="selectAll" class="ml-2 font-medium">Select All Permissions</label>
                 </div>
 
                 <table style="width:100%; overflow: hidden;">
@@ -29,7 +31,7 @@
                                                     :checked="areAllInGroupSelected({{ Js::from($permissions->pluck('name')) }})"
                                                     @click.stop="toggleGroup({{ Js::from($permissions->pluck('name')) }})"
                                                 >
-                                                <b><span>{{ $group }}</span></b>
+                                                <b><span>{{ ucfirst($group) }}</span></b>
                                             </div>
                                             <svg :class="{ 'rotate-90': open }" class="h-5 w-5 text-gray-500 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
@@ -63,6 +65,16 @@
                     </tbody>
                 </table>
             </flux:checkbox.group>
+            @error('permissions') <div class="text-red-600 mt-1">{{ $message }}</div> @enderror
+
+            <div class="mb-4">
+                <label for="status" class="block mb-2 font-medium">Status</label>
+                <select wire:model="status" id="status" class="w-full border-gray-300 rounded" required>
+                    <option value="Active">Active</option>
+                    <option value="Inactive">Inactive</option>
+                </select>
+                @error('status') <div class="text-red-600 mt-1">{{ $message }}</div> @enderror
+            </div>
 
             <flux:button type="submit" variant="primary">Submit</flux:button>
         </form>
@@ -107,13 +119,9 @@
 
                 const selectAllCheckbox = document.getElementById('selectAll');
 
-                if (this.selectedPermissions.length === allValues.length) {
-                    selectAllCheckbox.checked = true;
-                } else {
-                    selectAllCheckbox.checked = false;
-                }
+                selectAllCheckbox.checked = this.selectedPermissions.length === allValues.length;
+                selectAllCheckbox.indeterminate = this.selectedPermissions.length > 0 && this.selectedPermissions.length < allValues.length;
             }
         }
     }
 </script>
-

@@ -18,7 +18,7 @@ class SwitchUserController extends Controller
         $user = User::find($userId);
         session(['admin_id' => Auth::id()]);
         Auth::login($user);
-        return redirect('/dashboard')->with('success', 'Switched to user: ' . $user->name);
+        return redirect('/dashboard')->with('success', 'Switched to: ' . $user->name);
     }
 
     public function switchBack(Request $request)

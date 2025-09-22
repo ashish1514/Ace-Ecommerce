@@ -10,7 +10,7 @@ class UserIndex extends Component
     public function render()
     {   
         $users = User::orderBy('id', 'desc')->get();
-        return view('livewire.users.user-index',compact('users'));
+        return view('livewire.users.user-index', compact('users'));
     }
     public function delete($id)
     {   

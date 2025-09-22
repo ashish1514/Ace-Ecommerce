@@ -29,9 +29,14 @@
                     @endif
                     @if(auth()->user()->can('Product Add') ||
                     auth()->user()->can('Product Edit') ||
-                    auth()->user()->can('Product Delete') ||
-                    auth()->user()->can('Product Show'))
-                    <flux:navlist.item icon="list-bullet" :href="route('products.index')" :current="request()->routeIs('products.index')" wire:navigate>{{ __('Products') }}</flux:navlist.item>
+                    auth()->user()->can('Product Delete'))
+                    <flux:navlist.item icon="cube" :href="route('products.index')" :current="request()->routeIs('products.index')" wire:navigate>{{ __('Products') }}</flux:navlist.item>
+                    @endif
+                    @if(auth()->user()->can('Staff Add') ||
+                    auth()->user()->can('Staff Edit') ||
+                    auth()->user()->can('Staff Delete') ||
+                    auth()->user()->can('Staff Show'))
+                    <flux:navlist.item icon="bars-3" :href="route('staff.index')" :current="request()->routeIs('staff.index')" wire:navigate>{{ __('Staff') }}</flux:navlist.item>
                     @endif
                 </flux:navlist.group>
             </flux:navlist>

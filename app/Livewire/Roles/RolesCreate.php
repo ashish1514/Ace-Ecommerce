@@ -11,6 +11,7 @@ class RolesCreate extends Component
     public $name;
     public $permissions = [];
     public $allPermissions = [];
+    public $status = 'Active';
 
     public function mount()
     {
@@ -36,7 +37,8 @@ class RolesCreate extends Component
         ]);
 
         $role = Role::create([
-            'name' => $this->name
+            'name' => $this->name,
+            'status' => $this->status,
         ]);
 
         $role->givePermissionTo($this->permissions);

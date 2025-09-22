@@ -15,6 +15,7 @@ return new class extends Migration
         $table->id();
         $table->string('name');
         $table->text('detail');
+        $table->string('status')->default('Active');
         $table->timestamps();
     });
 

@@ -9,11 +9,14 @@ class ProductEdit extends Component
 {
     public $product;
     public $name, $detail;
+    public $status =[];
+    
      public function mount($id)
     {
         $this->product = Product::find($id);
         $this->name = $this->product->name;
         $this->detail = $this->product->detail;
+        $this->status = $this->product->status;
     }
       public function submit()
     {
@@ -23,6 +26,7 @@ class ProductEdit extends Component
         ]);
         $this->product->name = $this->name;
         $this->product->detail = $this->detail;
+        $this->product->status = $this->status;
         $this->product->save();
         session()->flash('success', 'Product Edit  successfully.');
         return redirect()->route('products.index');

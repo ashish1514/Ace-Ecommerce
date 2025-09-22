@@ -10,6 +10,7 @@ use Illuminate\Validation\ValidationException;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Validate;
 use Livewire\Volt\Component;
+use App\Models\User;
 
 new #[Layout('components.layouts.auth')] class extends Component {
     #[Validate('required|string|email')]
@@ -26,6 +27,28 @@ new #[Layout('components.layouts.auth')] class extends Component {
 
         $this->ensureIsNotRateLimited();
 
+        // Check if user exists and credentials are valid
+        if (! Auth::validate(['email' => $this->email, 'password' => $this->password])) {
+            RateLimiter::hit($this->throttleKey());
+
+            throw ValidationException::withMessages([
+                'email' => __('auth.failed'),
+            ]);
+        }
+
+        // Retrieve the user
+        $user = User::where('email', $this->email)->first();
+
+        // Check if user is inactive
+        if ($user && $user->status === 'Inactive') {
+            RateLimiter::hit($this->throttleKey());
+
+            throw ValidationException::withMessages([
+                'email' => 'Your account is inactive. Please contact support.',
+            ]);
+        }
+
+        // Attempt login
         if (! Auth::attempt(['email' => $this->email, 'password' => $this->password], $this->remember)) {
             RateLimiter::hit($this->throttleKey());
 
@@ -36,10 +59,11 @@ new #[Layout('components.layouts.auth')] class extends Component {
 
         RateLimiter::clear($this->throttleKey());
         Session::regenerate();
-                session()->flash('success', 'Login successfully.');
+        session()->flash('success', 'Login successfully.');
 
         $this->redirectIntended(default: route('dashboard', absolute: false), navigate: true);
     }
+
     protected function ensureIsNotRateLimited(): void
     {
         if (! RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
@@ -58,10 +82,9 @@ new #[Layout('components.layouts.auth')] class extends Component {
         ]);
     }
 
-
     protected function throttleKey(): string
     {
-        return Str::transliterate(Str::lower($this->email).'|'.request()->ip());
+        return Str::transliterate(Str::lower($this->email) . '|' . request()->ip());
     }
 }; ?>
 

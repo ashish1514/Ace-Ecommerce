@@ -5,15 +5,14 @@ namespace App\Livewire\Users;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Livewire\Component;
-use Illuminate\Validation\Rule;
-
 use Spatie\Permission\Models\Role;
-
 
 class UserCreate extends Component
 {
     public $name, $email, $password, $password_confirmation, $allRoles;
     public $roles = [];
+    public $status = 'Active'; 
+
     public function mount()
     {
         $this->allRoles = Role::all();
@@ -30,12 +29,12 @@ class UserCreate extends Component
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:6|confirmed',
-            'roles' => 'required',
         ]);
 
         $user = User::create([
             'name' => $this->name,
             'email' => $this->email,
+            'status' => $this->status,
             'password' => Hash::make($this->password),
         ]);
 
@@ -43,5 +42,4 @@ class UserCreate extends Component
         session()->flash('success', 'User created successfully.');
         return redirect()->route('users.index');
     }
-    
 }

@@ -11,6 +11,16 @@
        <form wire:submit.prevent="submit" class="mt-6 space-y-6">
             <flux:input wire:model="name" label="Name" />
             <flux:textarea wire:model="detail" label="Detail" />
+             <div class="mb-4">
+                <label for="status" class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                <select wire:model="status"id="status" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                    <option value="Active">Active</option>
+                    <option value="Inactive">Inactive</option>
+                </select>
+                @error('status')
+                    <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                @enderror
+            </div>
             <flux:button type="submit" variant="primary">Submit</flux:button>
         </form>
     </div>

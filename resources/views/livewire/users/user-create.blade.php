@@ -18,6 +18,13 @@
             <flux:checkbox label="{{$role->name }}" value="{{$role->name }}"/>
             @endforeach
             </flux:checkbox.group>
+            <div class="mb-4">
+                <label for="status" class="block mb-2 font-medium">Status</label>
+                <select wire:model="status" id="status" class="w-full border-gray-300 rounded">
+                    <option value="Active">Active</option>
+                    <option value="Inactive">Inactive</option>
+                </select>
+            </div>
             <flux:button type="submit" variant="primary">Submit</flux:button>
         </form>
     </div>
