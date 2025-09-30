@@ -25,9 +25,6 @@ new #[Layout('components.layouts.auth')] class extends Component {
     {
         $this->validate();
 
-        $this->ensureIsNotRateLimited();
-
-        // Check if user exists and credentials are valid
         if (! Auth::validate(['email' => $this->email, 'password' => $this->password])) {
             RateLimiter::hit($this->throttleKey());
 
@@ -36,19 +33,15 @@ new #[Layout('components.layouts.auth')] class extends Component {
             ]);
         }
 
-        // Retrieve the user
         $user = User::where('email', $this->email)->first();
 
-        // Check if user is inactive
         if ($user && $user->status === 'Inactive') {
             RateLimiter::hit($this->throttleKey());
-
             throw ValidationException::withMessages([
                 'email' => 'Your account is inactive. Please contact support.',
             ]);
         }
 
-        // Attempt login
         if (! Auth::attempt(['email' => $this->email, 'password' => $this->password], $this->remember)) {
             RateLimiter::hit($this->throttleKey());
 
@@ -58,29 +51,17 @@ new #[Layout('components.layouts.auth')] class extends Component {
         }
 
         RateLimiter::clear($this->throttleKey());
-        Session::regenerate();
-        session()->flash('success', 'Login successfully.');
+        session()->regenerate();
 
-        $this->redirectIntended(default: route('dashboard', absolute: false), navigate: true);
-    }
-
-    protected function ensureIsNotRateLimited(): void
-    {
-        if (! RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
-            return;
+        $user = Auth::user();
+        if ($user && $user->role === 'Customer') {
+            $this->redirect(route('home'), navigate: true);
+        } else {
+            $this->redirect(route('dashboard'), navigate: true);
+            session()->flash('success', 'Login successfully.');
         }
-
-        event(new Lockout(request()));
-
-        $seconds = RateLimiter::availableIn($this->throttleKey());
-
-        throw ValidationException::withMessages([
-            'email' => __('auth.throttle', [
-                'seconds' => $seconds,
-                'minutes' => ceil($seconds / 60),
-            ]),
-        ]);
     }
+
 
     protected function throttleKey(): string
     {
@@ -90,12 +71,9 @@ new #[Layout('components.layouts.auth')] class extends Component {
 
 <div class="flex flex-col gap-6">
     <x-auth-header :title="__('Log in')"/>
-
-    <!-- Session Status -->
     <x-auth-session-status class="text-center" :status="session('status')" />
 
     <form method="POST" wire:submit="login" class="flex flex-col gap-6">
-        <!-- Email Address -->
         <flux:input
             wire:model="email"
             :label="__('Email ')"
@@ -106,7 +84,6 @@ new #[Layout('components.layouts.auth')] class extends Component {
             placeholder="email@example.com"
         />
 
-        <!-- Password -->
         <div class="relative">
             <flux:input
                 wire:model="password"
@@ -121,7 +98,6 @@ new #[Layout('components.layouts.auth')] class extends Component {
 
         </div>
 
-        <!-- Remember Me -->
         <flux:checkbox wire:model="remember" :label="__('Remember me')" />
 
         <div class="flex items-center justify-end">

@@ -22,5 +22,10 @@ return [
             'slug' => 'product',
             'roles' => ['Product Add', 'Product Edit', 'Product Delete', 'Product Show'],
         ],
+         [
+            'name' => 'Category',
+            'slug' => 'category',
+            'roles' => ['Category Add', 'Category Edit', 'Category Delete', 'Category Show'],
+        ],
     ],
 ];

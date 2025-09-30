@@ -32,7 +32,7 @@
                             <td class="px-6 py-2">
                             <div class="flex flex-wrap gap-2">
                                 @foreach(explode(' ', $role['permissions_formatted']) as $perm)
-                                    <span class="bg-green-500 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg">{{ $perm }}</span>
+                                    <span class="bg-green-500 hover:bg-green-700 text-white font-semibold  px-4 rounded-lg">{{ $perm }}</span>
                                 @endforeach
                             </div>
                             <td class="px-6 py-2 text-black">

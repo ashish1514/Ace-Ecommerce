@@ -19,6 +19,7 @@ class UsersSeeder extends Seeder
             [
                 'name' => 'Admin',
                 'is_admin' => 1,
+                'role' => 'Admin',
                 'password' => bcrypt('admin@gmail.com'),
             ]
         );
@@ -28,6 +29,7 @@ class UsersSeeder extends Seeder
             ['email' => 'customer@gmail.com'],
             [
                 'name' => 'Customer',
+                'role' => 'Customer',
                 'password' => bcrypt('customer@gmail.com'),
             ]
         );
@@ -37,6 +39,7 @@ class UsersSeeder extends Seeder
             ['email' => 'manager@gmail.com'],
             [
                 'name' => 'Manager',
+                'role' => 'Manager',
                 'password' => bcrypt('manager@gmail.com'),
             ]
         );
@@ -46,6 +49,7 @@ class UsersSeeder extends Seeder
             ['email' => 'staff@gmail.com'],
             [
                 'name' => 'Staff',
+                'role' => 'Staff',
                 'password' => bcrypt('staff@gmail.com'),
             ]
         );

@@ -23,8 +23,16 @@ new #[Layout('components.layouts.auth')] class extends Component {
         ]);
 
         $validated['password'] = Hash::make($validated['password']);
-
+        $validated['role'] = 'Customer'; 
         event(new Registered(($user = User::create($validated))));
+
+        if (method_exists($user, 'assignRole')) {
+            $user->assignRole('Customer');
+        } elseif (property_exists($user, 'role')) {
+            $user->role = 'Customer';
+            $user->save();
+        }
+
         Auth::login($user);
         $this->redirectIntended(route('dashboard', absolute: false), navigate: true);
     }

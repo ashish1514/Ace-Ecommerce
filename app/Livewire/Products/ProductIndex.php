@@ -18,9 +18,17 @@ class ProductIndex extends Component
     public function delete($id)
     {   
         $product = Product::find($id);
-        $product->delete();
-        session()->flash("success", "Product deleted successfully");
-        $this->dispatch('Productdeleted', productname: $product->name);
+
+        if ($product) {
+            $product->delete();
+            session()->flash("success", "Product deleted successfully");
+
+            $this->dispatch('livewire:productDeleted', ['productName' => $product->name]);
+
+            return redirect()->route('products.index');
+        }
+
+        session()->flash("error", "Product not found.");
         return redirect()->route('products.index');
     }
 }

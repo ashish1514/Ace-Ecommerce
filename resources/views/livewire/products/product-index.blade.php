@@ -1,53 +1,64 @@
-<div>
-    <div class="relative mb-6 w-full">
-        <flux:heading size="xl" level="1">{{ __('Products') }}</flux:heading>
-        <flux:subheading size="lg" class="mb-6">{{ __('Manage all your products') }}</flux:subheading>
-        
+<div class="container mt-4">
+    <div class="mb-4 d-flex justify-content-between align-items-center">
+        <div>
+            <h1 class="h3">{{ __('Products') }}</h1>
+            <p class="text-muted mb-0">{{ __('Manage all your products') }}</p>
+        </div>
         @can('Product Add')
-            <flux:button variant="primary" href="{{ route('products.create') }}">
+            <a href="{{ route('products.create') }}" class="btn btn-primary">
                 {{ __('Create Products') }}
-            </flux:button>
+            </a>
         @endcan
     </div>
 
-    <div class="overflow-x-auto mt-6">
-        <table id="myCustomTable" class="w-full text-black">
-            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+    <div class="table-responsive mt-4">
+        <table id="myCustomTable" class="table table-bordered table-hover align-middle">
+            <thead class="table-light">
                 <tr>
                     <th scope="col">Name</th>
-                    <th scope="col">Details</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Image</th>
+                    <th scope="col">Description</th>
                     <th scope="col">Status</th>
                     <th scope="col">Action</th>
                 </tr>
             </thead>
             <tbody>
                 @forelse($products as $product)
-                    <tr class="odd:bg-white even:bg-gray-50">
-                        <td class="px-6 py-4 text-black">{{ $product->name }}</td>
-                        <td class="px-6 py-4 text-black">{{ $product->detail }}</td>
-                        <td class="px-6 py-2 text-black">
-                            @if($product->status === 'Active')
-                                <flux:badge class="bg-green-500 text-white" color="green">{{ ucfirst($product->status) }}</flux:badge>
-                            @else
-                                <flux:badge class="bg-red-500 text-white" color="red">{{ ucfirst($product->status) }}</flux:badge>
+                    <tr>
+                        <td>{{ $product->name }}</td>
+                        <td>{{ $product->price }}</td>
+                        <td>
+                            @if($product->image)
+                                <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="img-thumbnail" style="height: 40px; width: 40px; object-fit: cover;">
                             @endif
-                        </td>                        <td class="px-6 py-4 flex space-x-2">
-                            @can('Product Edit')
-                                <a href="{{ route('products.edit', $product->id) }}" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg">
-                                    Edit
-                                </a>
-                            @endcan
-
-                            @can('Product Delete')
-                                <button onclick="confirmDelete({{ $product->id }}, '{{ $product->name }}')" class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg">
-                                    Delete
-                                </button>
-                            @endcan
+                        </td>
+                        <td>{{ $product->description }}</td>
+                        <td>
+                            @if($product->status === 'Active')
+                                <span class="badge bg-success">{{ ucfirst($product->status) }}</span>
+                            @else
+                                <span class="badge bg-danger">{{ ucfirst($product->status) }}</span>
+                            @endif
+                        </td>
+                        <td>
+                            <div class="d-flex gap-2">
+                                @can('Product Edit')
+                                    <a href="{{ route('products.edit', $product->id) }}" class="btn btn-sm btn-primary">
+                                        {{ __('Edit') }}
+                                    </a>
+                                @endcan
+                                @can('Product Delete')
+                                    <button onclick="confirmDelete({{ $product['id'] }})" class="btn btn-sm btn-danger">
+                                        {{ __('Delete') }}
+                                    </button>
+                                @endcan
+                            </div>
                         </td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="5" class="px-6 py-4 text-center text-gray-500 dark:text-gray-400">
+                        <td colspan="6" class="text-center text-muted">
                             {{ __('No products found.') }}
                         </td>
                     </tr>
@@ -59,14 +70,13 @@
 
 <script>
     $(document).ready(function () {
-        $('#myCustomTable').DataTable({
-        });
+        $('#myCustomTable').DataTable();
     });
 
-    function confirmDelete(productId, productName) {
+    function confirmDelete(productId) {
         Swal.fire({
             title: 'Are you sure?',
-            text: `You are about to delete "${productName}". This action cannot be undone.`,
+            text: "You are about to delete this product.",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#e3342f',
@@ -74,17 +84,17 @@
             confirmButtonText: 'Yes, delete it!'
         }).then((result) => {
             if (result.isConfirmed) {
-                Livewire.emit('delete', productId);
+                @this.call('delete', productId);
             }
         });
     }
 
-    document.addEventListener('livewire:productDeleted', (event) => {
+    document.addEventListener('livewire:userDeleted', (event) => {
         Swal.fire({
             toast: true,
             position: 'top-end',
             icon: 'success',
-            title: `${event.detail.productName} deleted successfully`,
+            title: event.detail + ' deleted successfully',
             showConfirmButton: false,
             timer: 3000
         });
