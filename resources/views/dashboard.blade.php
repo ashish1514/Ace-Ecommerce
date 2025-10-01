@@ -1,58 +1,70 @@
 <x-layouts.app :title="__('Dashboard')">
-    <div class="flex h-full w-full flex-1 flex-col gap-4 rounded-xl">
-       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-            <div class="rounded-lg dark:bg-gray-900 p-4 border-t-2 border-blue-300 shadow-sm border border-neutral-200">
-                <p class="text-sm text-gray-900">Total Users</p>
-                <p class="text-2xl font-semibold text-gray-900">{{ $totalUsers }}</p>
-            </div>
-                <div class="rounded-lg dark:bg-gray-900 p-4 border-t-2 border-green-300 shadow-sm border border-neutral-200">
-                    <p class="text-sm text-gray-900">Total Products</p>
-                    <p class="text-2xl font-semibold text-gray-900">{{ $totalProducts }}</p>
+    <div class="container-fluid py-4">
+        <div class="row g-4 mb-4">
+            <div class="col-12 col-sm-6 col-md-4">
+                <div class="card border-top border-3 border-primary shadow-sm h-100">
+                    <div class="card-body">
+                        <p class="card-text text-muted mb-1">Total Users</p>
+                        <h4 class="card-title fw-semibold mb-0">{{ $totalUsers }}</h4>
+                    </div>
                 </div>
-
-            <div class="rounded-lg  dark:bg-gray-900 p-4 border-t-2 border-blue-300 shadow-sm border border-neutral-200">
-                <p class="text-sm text-gray-900">Total Services</p>
-                <p class="text-2xl font-semibold text-sm text-gray-900">12</p>
             </div>
-    </div>
+            <div class="col-12 col-sm-6 col-md-4">
+                <div class="card border-top border-3 border-success shadow-sm h-100">
+                    <div class="card-body">
+                        <p class="card-text text-muted mb-1">Total Products</p>
+                        <h4 class="card-title fw-semibold mb-0">{{ $totalProducts }}</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-sm-6 col-md-4">
+                <div class="card border-top border-3 border-primary shadow-sm h-100">
+                    <div class="card-body">
+                        <p class="card-text text-muted mb-1">Total Services</p>
+                        <h4 class="card-title fw-semibold mb-0">12</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-        <div class="border border-neutral-200 p-6 rounded-xl mx-auto w-full max-w-6xl ">
-            <h4 class="text-lg font-semibold text-center text-gray-800 dark:text-gray-200 mb-4">Users Information</h4>
+        <div class="card border shadow-sm mx-auto w-100" style="max-width: 1100px;">
+            <div class="card-body">
+                <h4 class="card-title text-center mb-4">Users Information</h4>
                 <hr>
-            <div class="overflow-x-auto">
-                <table class="w-full text-sm text-left rtl:text-right text-gray-900 dark:text-gray-900">
-                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                        <tr>
-                            <th scope="col" class="px-6 py-3">ID</th>
-                            <th scope="col" class="px-6 py-3">Name</th>
-                            <th scope="col" class="px-6 py-3">Email</th>
-                            <th scope="col" class="px-6 py-3">Roles</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse ($users as $user)
-                            <tr class="odd: odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800">
-                                <td class="px-6 py-2 text-gray-900 dark:bg-gray-900">{{ $user->id }}</td>
-                                <td class="px-6 py-2 text-gray-600 dark:text-gray-300">{{ $user->name }}</td>
-                                <td class="px-6 py-2 text-gray-600 dark:text-gray-300">{{ $user->email }}</td>
-                                <td class="px-6 py-2 text-gray-600 dark:text-gray-300">
-                                    <div class="flex flex-wrap gap-2">
-                                        @foreach($user->roles as $role)
-                                            <flux:badge>{{ $role->name }}</flux:badge>
-                                        @endforeach
-                                    </div>
-                                </td>            
-                        </td>
-                            </tr>
-                        @empty
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover align-middle mb-0">
+                        <thead class="table-light">
                             <tr>
-                                <td colspan="4" class="px-6 py-4 text-center text-gray-500 dark:text-gray-400">
-                                    No users found.
-                                </td>
+                                <th scope="col">ID</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Roles</th>
                             </tr>
-                        @endforelse
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @forelse ($users as $user)
+                                <tr>
+                                    <td>{{ $user->id }}</td>
+                                    <td>{{ $user->name }}</td>
+                                    <td>{{ $user->email }}</td>
+                                    <td>
+                                        <div class="d-flex flex-wrap gap-2">
+                                            @foreach($user->roles as $role)
+                                                <span class="badge bg-secondary">{{ $role->name }}</span>
+                                            @endforeach
+                                        </div>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="4" class="text-center text-muted">
+                                        No users found.
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>

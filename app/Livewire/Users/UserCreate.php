@@ -20,7 +20,9 @@ class UserCreate extends Component
 
     public function render()
     {
-        return view('livewire.users.user-create');
+        return view('livewire.users.user-create', [
+            'allRoles' => $this->allRoles,
+        ]);
     }
 
     public function submit()
@@ -29,6 +31,8 @@ class UserCreate extends Component
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:6|confirmed',
+            'roles' => 'required|array|min:1',
+            'roles.*' => 'exists:roles,name',
         ]);
 
         $user = User::create([
@@ -39,6 +43,7 @@ class UserCreate extends Component
         ]);
 
         $user->syncRoles($this->roles);
+
         session()->flash('success', 'User created successfully.');
         return redirect()->route('users.index');
     }

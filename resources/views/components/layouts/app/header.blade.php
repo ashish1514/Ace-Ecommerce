@@ -1,48 +1,44 @@
 <flux:header class="hidden lg:flex items-center justify-end w-full px-4 py-2 border-b border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900">
-    <flux:dropdown class="hidden lg:block" position="bottom" align="start">
-                    <flux:profile
-                        :name="auth()->user()->name"
-                        :initials="auth()->user()->initials()"
-                        icon:trailing="chevrons-up-down"
-                    />
-
-                    <flux:menu class="w-[220px]">
-                        <flux:menu.radio.group>
-                            <div class="p-0 text-sm font-normal">
-                                <div class="flex items-center gap-2 px-1 py-1.5 text-start text-sm">
-                                    <span class="relative flex h-8 w-8 shrink-0 overflow-hidden rounded-lg">
-                                        <span
-                                            class="flex h-full w-full items-center justify-center rounded-lg bg-neutral-200 text-black dark:bg-neutral-700 dark:text-white"
-                                        >
-                                            {{ auth()->user()->initials() }}
-                                        </span>
-                                    </span>
-
-                                    <div class="grid flex-1 text-start text-sm leading-tight">
-                                        <span class="truncate font-semibold">{{ auth()->user()->name }}</span>
-                                        <span class="truncate text-xs">{{ auth()->user()->email }}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </flux:menu.radio.group>
-                        
-                        <flux:menu.separator />
-                                <flux:menu.radio.group><flux:menu.item :href="route('admin.switch.back')" icon="user"  wire:navigate>{{ __('Switch Back to Admin') }}</flux:menu.item>
-                        </flux:menu.radio.group>
-                        <flux:menu.separator />       
-                        <flux:menu.radio.group>
-                            <flux:menu.item :href="route('users.edit', ['id' => auth()->user()->id])" icon="user-circle" wire:navigate>
-                                {{ __('Profile') }}
-                            </flux:menu.item>
-                        </flux:menu.radio.group>
-                        <flux:menu.separator />
-
-                        <form method="POST" action="{{ route('logout') }}" class="w-full">
-                            @csrf
-                            <flux:menu.item as="button" type="submit" icon="arrow-right-start-on-rectangle" class="w-full">
-                                {{ __('Log Out') }}
-                            </flux:menu.item>
-                        </form>
-                    </flux:menu>
-    </flux:dropdown>
+    <div class="dropdown d-none d-lg-block">
+        <button class=" dropdown-toggle d-flex align-items-center" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+            <span class="d-inline-block rounded-circle bg-secondary text-white text-center me-2" style="width: 32px; height: 32px; line-height: 32px; font-weight: bold;">
+                {{ auth()->user()->initials() }}
+            </span>
+            <span class="d-none d-xl-inline">{{ auth()->user()->name }}</span>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="userDropdown" style="min-width: 220px;">
+            <li class="px-3 py-2">
+                <div class="d-flex align-items-center">
+                    <span class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center me-2" style="width: 32px; height: 32px; font-weight: bold;">
+                        {{ auth()->user()->initials() }}
+                    </span>
+                    <div class="flex-grow-1">
+                        <div class="fw-semibold text-truncate">{{ auth()->user()->name }}</div>
+                        <div class="text-muted small text-truncate">{{ auth()->user()->email }}</div>
+                    </div>
+                </div>
+            </li>
+            <li><hr class="dropdown-divider"></li>
+            <li>
+                <a class="dropdown-item d-flex align-items-center" href="{{ route('admin.switch.back') }}">
+                    <i class="bi bi-person me-2"></i> {{ __('Switch Back to Admin') }}
+                </a>
+            </li>
+            <li><hr class="dropdown-divider"></li>
+            <li>
+                <a class="dropdown-item d-flex align-items-center" href="{{ route('users.edit', ['id' => auth()->user()->id]) }}">
+                    <i class="bi bi-person-circle me-2"></i> {{ __('Profile') }}
+                </a>
+            </li>
+            <li><hr class="dropdown-divider"></li>
+            <li>
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit" class="dropdown-item d-flex align-items-center">
+                        <i class="bi bi-box-arrow-right me-2"></i> {{ __('Log Out') }}
+                    </button>
+                </form>
+            </li>
+        </ul>
+    </div>
 </flux:header>

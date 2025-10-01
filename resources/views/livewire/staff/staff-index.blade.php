@@ -1,68 +1,109 @@
-<div>
-    <div class="relative mb-6 w-full">
-        <flux:heading size="xl" level="1">{{ __('Staff') }}</flux:heading>
-        <flux:subheading size="lg" class="mb-6">{{ __('Manage all your staff members') }}</flux:subheading>
-        <flux:separator variant="subtle" />
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+            <h3 class="fw-bold mb-1">{{ __('Staff') }}</h3>
+            <div class="text-muted mb-2" style="font-size: 1.05rem;">{{ __('Manage all your staff members') }}</div>
+        </div>
+        @can('Staff Add')
+            <a href="{{ route('staff.create') }}" class="btn btn-primary">Create Staff</a>
+        @endcan
     </div>
-    @can('Staff Add')
-        <flux:button variant="primary" href="{{ route('staff.create') }}">Create Staff</flux:button>
-    @endcan
-
-    <div class="overflow-x-auto mt-6">
-        <table id="myCustomTable" class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                <tr>
-                    <th class="px-6 py-3">Name</th>
-                    <th class="px-6 py-3">Email</th>
-                    <th class="px-6 py-3">Department</th>
-                    <th class="px-6 py-3">Status</th>
-                    <th class="px-6 py-3">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse ($staff as $member)
-                    <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-dark">
-                        <td class="px-6 py-2 text-black">{{ $member->name }}</td>
-                        <td class="px-6 py-2 text-black">{{ $member->email }}</td>
-                        <td class="px-6 py-2 text-black">
-                            @if($member->department)
-                                <flux:badge>{{ $member->department->name }}</flux:badge>
-                            @else
-                                <span class="text-gray-400">N/A</span>
-                            @endif
-                        </td>
-                        <td class="px-6 py-2 text-black">
-                            @if($member->status === 'Active')
-                                <flux:badge class="bg-green-500 text-white" color="green">{{ ucfirst($member->status) }}</flux:badge>
-                            @else
-                                <flux:badge class="bg-red-500 text-white" color="red">{{ ucfirst($member->status) }}</flux:badge>
-                            @endif
-                        </td>
-                        <td class="px-6 py-2 flex flex-wrap gap-2 items-center">
-                            @can('Staff Edit')
-                                <a href="{{ route('staff.edit', $member->id) }}" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg">Edit</a>
-                            @endcan
-                            @can('Staff Delete')
-                                <button onclick="confirmDelete({{ $member->id }}, '{{ $member->name }}')" class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg">Delete</button>
-                            @endcan
-                        </td>
-                    </tr>
-                @empty
-                    <tr>
-                        <td colspan="5" class="px-6 py-4 text-center text-gray-500 dark:text-gray-400">
-                            No staff members found.
-                        </td>
-                    </tr>
-                @endforelse
-            </tbody>
-        </table>
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <div class="row mb-3">
+                <div class="col-md-6 col-12 d-flex align-items-center gap-2">
+                    <label for="entries" class="form-label mb-0">Show</label>
+                    <select id="entries" class="form-select form-select-sm" style="width: auto; display: inline-block;">
+                        <option>10</option>
+                        <option>25</option>
+                        <option>50</option>
+                        <option>100</option>
+                    </select>
+                    <span class="ms-2">entries</span>
+                </div>
+                <div class="col-md-6 col-12 d-flex justify-content-md-end justify-content-start mt-2 mt-md-0">
+                    <input type="search" class="form-control form-control-sm" placeholder="Search..." style="max-width: 220px;" id="staffSearch">
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table id="myCustomTable" class="table table-bordered table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Department</th>
+                            <th>Status</th>
+                            <th style="min-width: 140px;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse ($staff as $member)
+                            <tr>
+                                <td>{{ $member->name }}</td>
+                                <td>{{ $member->email }}</td>
+                                <td>
+                                    @if($member->department)
+                                        <span class="badge bg-secondary">{{ $member->department->name }}</span>
+                                    @else
+                                        <span class="text-muted">N/A</span>
+                                    @endif
+                                </td>
+                                <td>
+                                    @if($member->status === 'Active')
+                                        <span class="badge bg-success">{{ ucfirst($member->status) }}</span>
+                                    @else
+                                        <span class="badge bg-danger">{{ ucfirst($member->status) }}</span>
+                                    @endif
+                                </td>
+                                <td>
+                                    <div class="d-flex gap-2">
+                                        @can('Staff Edit')
+                                            <a href="{{ route('staff.edit', $member->id) }}" class="btn btn-sm btn-primary">Edit</a>
+                                        @endcan
+                                        @can('Staff Delete')
+                                            <button onclick="confirmDelete({{ $member->id }}, '{{ $member->name }}')" class="btn btn-sm btn-danger">Delete</button>
+                                        @endcan
+                                    </div>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="5" class="text-center text-muted py-4">
+                                    No staff members found.
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+            <div class="d-flex justify-content-between align-items-center mt-3">
+                <div>
+                    Showing 1 to {{ count($staff) }} of {{ count($staff) }} entries
+                </div>
+                <nav>
+                    <ul class="pagination pagination-sm mb-0">
+                        <li class="page-item disabled"><span class="page-link">Previous</span></li>
+                        <li class="page-item active"><span class="page-link">1</span></li>
+                        <li class="page-item disabled"><span class="page-link">Next</span></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
     </div>
 </div>
 <script>
     $(document).ready(function() {
         $('#myCustomTable').DataTable({
+            paging: false,
+            info: false,
+            searching: false // We'll use our own search input
+        });
+
+        $('#staffSearch').on('keyup', function() {
+            $('#myCustomTable').DataTable().search(this.value).draw();
         });
     });
+
     function confirmDelete(staffId, staffName) {
         Swal.fire({
             title: 'Are you sure?',

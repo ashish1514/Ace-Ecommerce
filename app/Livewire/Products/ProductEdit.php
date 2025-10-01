@@ -14,12 +14,13 @@ class ProductEdit extends Component
     use WithFileUploads;
 
     public $product;
-    public $name, $description, $shortdescription, $price, $image, $category_id, $oldImage, $oldImageUrl;
-    public $status;
-    public $categories;
+    public $name, $description, $shortdescription, $status = 'Active', $price;
+    public $category_id;
+    public $image;
     public $gallery_temp = [];
-    public $oldGallery = [];
-    public $oldGalleryUrls = [];
+    public $oldImage;
+    public $oldImageUrl;
+    public $productGallery = []; 
 
     public function mount($id)
     {
@@ -32,12 +33,7 @@ class ProductEdit extends Component
         $this->status = $this->product->status;
         $this->oldImage = $this->product->image;
         $this->oldImageUrl = $this->oldImage ? asset('storage/' . $this->oldImage) : null;
-        $this->categories = Category::all();
-        $this->oldGallery = $this->product->galleries ? $this->product->galleries->pluck('image', 'id')->toArray() : [];
-        $this->oldGalleryUrls = [];
-        foreach ($this->oldGallery as $id => $img) {
-            $this->oldGalleryUrls[$id] = asset('storage/' . $img);
-        }
+        $this->productGallery = ProductGallery::where('product_id', $this->product->id)->get();
     }
 
     public function submit()
@@ -53,37 +49,43 @@ class ProductEdit extends Component
             'category_id' => 'required|exists:categories,id',
         ]);
 
-        $this->product->name = $this->name;
-        $this->product->description = $this->description;
-        $this->product->shortdescription = $this->shortdescription;
-        $this->product->price = $this->price;
-        $this->product->status = $this->status;
-        $this->product->category_id = $this->category_id;
-
+        $imagePath = $this->oldImage;
         if ($this->image) {
             if ($this->oldImage && Storage::disk('public')->exists($this->oldImage)) {
                 Storage::disk('public')->delete($this->oldImage);
             }
-            $imageName = $this->image->store('products', 'public');
-            $this->product->image = $imageName;
-        } else {
-            $this->product->image = $this->oldImage;
+            $imagePath = $this->image->store('products', 'public');
         }
 
+        $this->product->name = $this->name;
+        $this->product->description = $this->description;
+        $this->product->shortdescription = $this->shortdescription;
+        $this->product->price = $this->price;
+        $this->product->image = $imagePath;
+        $this->product->status = $this->status;
+        $this->product->category_id = $this->category_id;
         $this->product->save();
 
-        if ($this->gallery_temp && is_array($this->gallery_temp)) {
+        if (is_array($this->gallery_temp) && count($this->gallery_temp)) {
+            $oldGalleries = ProductGallery::where('product_id', $this->product->id)->get();
+            foreach ($oldGalleries as $oldGallery) {
+                if ($oldGallery->image && Storage::disk('public')->exists($oldGallery->image)) {
+                    Storage::disk('public')->delete($oldGallery->image);
+                }
+                $oldGallery->delete();
+            }
             foreach ($this->gallery_temp as $galleryImage) {
                 $galleryPath = $galleryImage->store('products/gallery', 'public');
-                ProductGallery::create([
-                    'product_id' => $this->product->id,
-                    'image' => $galleryPath,
-                ]);
+                $gallery = new ProductGallery();
+                $gallery->product_id = $this->product->id;
+                $gallery->image = $galleryPath;
+                $gallery->save();
             }
         }
 
-        session()->flash('message', 'Product edited successfully.');
+        $this->productGallery = ProductGallery::where('product_id', $this->product->id)->get();
 
+        session()->flash('success', 'Product edited successfully.');
         return redirect()->route('products.index');
     }
 
@@ -98,8 +100,8 @@ class ProductEdit extends Component
     public function render()
     {
         return view('livewire.products.product-edit', [
-            'categories' => $this->categories,
-            'oldGalleryUrls' => $this->oldGalleryUrls,
+            'categories' => Category::all(),
+            'productGallery' => $this->productGallery, 
         ]);
     }
 }

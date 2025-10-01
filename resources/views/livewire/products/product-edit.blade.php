@@ -6,9 +6,9 @@
         <hr>
     </div>
 
-    @if (session()->has('message'))
+    @if (session()->has('success'))
         <div class="alert alert-success mb-4">
-            {{ session('message') }}
+            {{ session('success') }}
         </div>
     @endif
 
@@ -54,7 +54,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="col-md-6">
                 <div class="bg-light p-3 rounded mb-4">
                     <div class="mb-3">
@@ -85,9 +84,19 @@
                 <div class="bg-light p-3 rounded mb-4">
                     <label for="gallery" class="form-label">Product Gallery Images</label>
                     <input type="file" wire:model="gallery_temp" id="gallery" accept="image/*" multiple class="form-control @error('gallery_temp.*') is-invalid @enderror" />
+                    <div class="text-muted small mt-2 mb-2">
+                        Drag &amp; drop images here or click to select.
+                    </div>
                     @error('gallery_temp.*') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                    <div class="mt-2">
-                        {{-- Show new gallery images being uploaded --}}
+                    <div class="mt-2 d-flex flex-wrap gap-2">
+                        @if (is_iterable($productGallery) && count($productGallery))
+                            @foreach ($productGallery as $gallery)
+                                <div class="position-relative d-inline-block" style="width: 90px; height: 90px;">
+                                    <img src="{{ asset('storage/' . $gallery->image) }}" alt="Gallery Image" class="img-thumbnail" style="max-width: 80px; max-height: 80px;">
+                                </div>
+                            @endforeach
+                        @endif
+
                         @if (is_array($gallery_temp) && count($gallery_temp))
                             @foreach ($gallery_temp as $index => $galleryImage)
                                 <div class="position-relative d-inline-block" style="width: 90px; height: 90px;">
@@ -99,14 +108,6 @@
                                         title="Remove Image">
                                         <span aria-hidden="true" style="font-size: 16px; line-height: 1;">&times;</span>
                                     </button>
-                                </div>
-                            @endforeach
-                        @endif
-
-                        @if (isset($oldGalleryUrls) && is_array($oldGalleryUrls) && count($oldGalleryUrls))
-                            @foreach ($oldGalleryUrls as $oldIndex => $oldGalleryUrl)
-                                <div class="position-relative d-inline-block" style="width: 90px; height: 90px;">
-                                    <img src="{{ $oldGalleryUrl }}" alt="Gallery Image" class="img-thumbnail" style="max-width: 80px; max-height: 80px;">
                                 </div>
                             @endforeach
                         @endif

@@ -60,11 +60,9 @@
                         <label for="image" class="form-label">Product Image</label>
                         <input type="file" wire:model="image" id="image" accept="image/*" class="form-control @error('image') is-invalid @enderror" />
                         @error('image') <div class="invalid-feedback">{{ $message }}</div> @enderror
-
                         @if ($image)
                             <div class="mt-2 position-relative d-inline-block">
                                 <img src="{{ $image->temporaryUrl() }}" alt="Main Image Preview" class="img-thumbnail" style="max-width: 150px;">
-                                <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 translate-middle" style="z-index:2; border-radius:50%;" wire:click="removeImage" title="Remove Image">&times;</button>
                             </div>
                         @endif
                     </div>
@@ -78,26 +76,22 @@
                         @error('status') <div class="invalid-feedback">{{ $message }}</div> @enderror
                     </div>
                 </div>
-                <div class="bg-light p-3 rounded mb-4"id="gallery-drop-area"style="border: 2px dashed #ced4da; position: relative;"
-                    ondragover="event.preventDefault(); this.style.borderColor='#007bff';"
-                    ondragleave="event.preventDefault(); this.style.borderColor='#ced4da';"
-                    ondrop="handleGalleryDrop(event)">
-                    
+                <div class="bg-light p-3 rounded mb-4">
                     <label for="gallery" class="form-label">Product Gallery Images</label>
-                    <input 
-                        type="file" 
-                        wire:model="gallery_temp" 
-                        id="gallery" 
-                        accept="image/*" 
-                        multiple 
-                        class="form-control @error('gallery_temp.*') is-invalid @enderror" 
-                        style="background: transparent;"
-                    />
+                    <input type="file" wire:model="gallery_temp" id="gallery" accept="image/*" multiple class="form-control @error('gallery_temp.*') is-invalid @enderror" />
                     <div class="text-muted small mt-2 mb-2">
                         Drag &amp; drop images here or click to select.
                     </div>
                     @error('gallery_temp.*') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                    <div class="mt-2">
+                    <div class="mt-2 d-flex flex-wrap gap-2">
+                        @if (isset($oldGalleryUrls) && is_array($oldGalleryUrls) && count($oldGalleryUrls))
+                            @foreach ($oldGalleryUrls as $oldIndex => $oldGalleryUrl)
+                                <div class="position-relative d-inline-block" style="width: 90px; height: 90px;">
+                                    <img src="{{ $oldGalleryUrl }}" alt="Gallery Image" class="img-thumbnail" style="max-width: 80px; max-height: 80px;">
+                                </div>
+                            @endforeach
+                        @endif
+
                         @if (is_array($gallery_temp) && count($gallery_temp))
                             @foreach ($gallery_temp as $index => $galleryImage)
                                 <div class="position-relative d-inline-block" style="width: 90px; height: 90px;">
@@ -105,7 +99,7 @@
                                     <button type="button"
                                         class="btn btn-danger btn-sm position-absolute"
                                         style="top: 2px; right: 2px; z-index: 2; border-radius: 50%; width: 24px; height: 24px; padding: 0; display: flex; align-items: center; justify-content: center;"
-                                        onclick="removeGalleryImageFromTemp({{ $index }})"
+                                        wire:click="removeGalleryImage({{ $index }})"
                                         title="Remove Image">
                                         <span aria-hidden="true" style="font-size: 16px; line-height: 1;">&times;</span>
                                     </button>
@@ -122,43 +116,3 @@
         </div>
     </form>
 </div>
-<script>
-   function handleGalleryDrop(event) {
-           event.preventDefault();
-       event.currentTarget.style.borderColor = '#ced4da';
-       let files = event.dataTransfer.files;
-       if (files.length) {
-               let input = document.getElementById('gallery');
-           let dt = new DataTransfer();
-           for (let i = 0; i < input.files.length; i++) {
-                   dt.items.add(input.files[i]);
-
-           }
-           for (let i = 0; i < files.length; i++) {
-                   dt.items.add(files[i]);
-
-           }
-           input.files = dt.files;
-           input.dispatchEvent(new Event('change', { bubbles: true }));
-       }
-     }
-   function removeGalleryImageFromTemp(index) {
-           let previews = document.querySelectorAll('#gallery-drop-area .position-relative.d-inline-block');
-       if (previews[index]) {
-               previews[index].remove();
-
-       }
-       let input = document.getElementById('gallery');
-       if (input && input.files.length) {
-               let dt = new DataTransfer();
-           for (let i = 0; i < input.files.length; i++) {
-                   if (i !== index) {
-                       dt.items.add(input.files[i]);
-
-               }
-           }
-           input.files = dt.files;
-           input.dispatchEvent(new Event('change', { bubbles: true }));
-       }
-   }
-/script>

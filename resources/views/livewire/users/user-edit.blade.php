@@ -1,50 +1,97 @@
-<div>
-    <div class="relative mb-6 w-full">
-        <flux:heading size="xl" level="1">{{ __('Edit User') }}</flux:heading>
-        <flux:subheading size="lg" class="mb-6">{{ __('Form for edit user detail') }}</flux:subheading>
-        <flux:separator variant="subtle" />
+<div class="container mt-5">
+    <div class="mb-4">
+        <h1 class="display-4">{{ __('Edit User') }}</h1>
+        <p class="lead mb-4">{{ __('Form for edit user detail') }}</p>
+        <hr>
     </div>
 
-    <flux:button variant="primary" href="{{route('users.index')}}" color="red">Back</flux:button>
+    <a href="{{ route('users.index') }}" class="btn btn-danger mb-3">Back</a>
 
-    <div class="w-150">
-        <form wire:submit.prevent="submit" class="mt-6 space-y-6">
-            <flux:input wire:model="name" label="Name"/>
-            @if(auth()->id() === $user->id)
-                <flux:input wire:model="email" label="Email" disabled/>
-            @else
-                <flux:input wire:model="email" label="Email"/>
-            @endif
-
-            <flux:input type="password" wire:model="password" label="Password"/>
-            <flux:input type="password" wire:model="password_confirmation" label="Confirm Password"/>
-
-            @if(auth()->id() === $user->id)
-                <flux:checkbox.group wire:model="roles" label="Roles" disabled>
-                    @foreach($allRoles as $role)
-                        <flux:checkbox label="{{ $role->name }}" value="{{ $role->name }}" />
-                    @endforeach
-                </flux:checkbox.group>
-            @else
-                <flux:checkbox.group wire:model="roles" label="Roles">
-                    @foreach($allRoles as $role)
-                        <flux:checkbox label="{{ $role->name }}" value="{{ $role->name }}" />
-                    @endforeach
-                </flux:checkbox.group>
-            @endif
-
-            @if (auth()->id() !== $user->id)
-            @if (auth()->user()->is_admin)            
-            <div class="mb-4">
-                <label for="status" class="block text-sm font-medium text-gray-700 mb-1">Status</label>
-                <select wire:model="status"id="status" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                    <option value="Active">Active</option>
-                    <option value="Inactive">Inactive</option>
-                </select>
-            @endif
-            @endif
-            </div><br>
-            <flux:button type="submit" variant="primary">Submit</flux:button>
+    <div class="w-100">
+        <form wire:submit.prevent="submit" autocomplete="off" class="mt-2">
+            <div class="row mb-3">
+                <div class="col-md-6 mb-3">
+                    <label for="name" class="form-label">Name</label>
+                    <input wire:model="name" type="text" id="name" class="form-control @error('name') is-invalid @enderror" autocomplete="off" />
+                    @error('name') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    @if(auth()->id() === $user->id)
+                        <input wire:model="email" type="email" id="email" class="form-control @error('email') is-invalid @enderror" autocomplete="off" disabled />
+                    @else
+                        <input wire:model="email" type="email" id="email" class="form-control @error('email') is-invalid @enderror" autocomplete="off" />
+                    @endif
+                    @error('email') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-6 mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input wire:model="password" type="password" id="password" class="form-control @error('password') is-invalid @enderror" autocomplete="off" />
+                    @error('password') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="password_confirmation" class="form-label">Confirm Password</label>
+                    <input wire:model="password_confirmation" type="password" id="password_confirmation" class="form-control @error('password_confirmation') is-invalid @enderror" autocomplete="off" />
+                    @error('password_confirmation') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Roles</label>
+                    <div class="d-flex flex-wrap gap-2">
+                        @if(auth()->id() === $user->id)
+                            @foreach($allRoles as $role)
+                                <div class="form-check me-3">
+                                    <input
+                                        class="form-check-input @error('roles') is-invalid @enderror"
+                                        type="checkbox"
+                                        id="role_{{ $role->id }}"
+                                        value="{{ $role->name }}"
+                                        wire:model="roles"
+                                        disabled
+                                    >
+                                    <label class="form-check-label" for="role_{{ $role->id }}">
+                                        {{ $role->name }}
+                                    </label>
+                                </div>
+                            @endforeach
+                        @else
+                            @foreach($allRoles as $role)
+                                <div class="form-check me-3">
+                                    <input
+                                        class="form-check-input @error('roles') is-invalid @enderror"
+                                        type="checkbox"
+                                        id="role_{{ $role->id }}"
+                                        value="{{ $role->name }}"
+                                        wire:model="roles"
+                                    >
+                                    <label class="form-check-label" for="role_{{ $role->id }}">
+                                        {{ $role->name }}
+                                    </label>
+                                </div>
+                            @endforeach
+                        @endif
+                    </div>
+                    @error('roles') <div class="invalid-feedback d-block">{{ $message }}</div> @enderror
+                </div>
+                @if (auth()->id() !== $user->id)
+                    @if (auth()->user()->is_admin)
+                        <div class="col-md-6 mb-3">
+                            <label for="status" class="form-label">Status</label>
+                            <select wire:model="status" id="status" required class="form-select @error('status') is-invalid @enderror">
+                                <option value="Active">Active</option>
+                                <option value="Inactive">Inactive</option>
+                            </select>
+                            @error('status') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                        </div>
+                    @endif
+                @endif
+            </div>
+            <div class="d-flex justify-content-end">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
         </form>
     </div>
 </div>

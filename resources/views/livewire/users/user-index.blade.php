@@ -1,72 +1,75 @@
-<div>
-    <div class="relative mb-6 w-full">
-        <flux:heading size="xl" level="1">{{ __('Users') }}</flux:heading>
-        <flux:subheading size="lg" class="mb-6">{{ __('Manage all your users') }}</flux:subheading>
-        <flux:separator variant="subtle" />
+<div class="container mt-4">
+    <div class="mb-4 d-flex justify-content-between align-items-center">
+        <div>
+            <h1 class="h3">{{ __('Users') }}</h1>
+            <p class="text-muted mb-0">{{ __('Manage all your users') }}</p>
+        </div>
+        @can('User Add')
+            <a href="{{ route('users.create') }}" class="btn btn-primary">
+                {{ __('Create User') }}
+            </a>
+        @endcan
     </div>
-    @can('User Add')
-        <flux:button variant="primary" href="{{ route('users.create') }}">Create User</flux:button>
-    @endcan
 
-    <div class="overflow-x-auto mt-6">
-        <table id="myCustomTable" class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+    <div class="table-responsive mt-4">
+        <table id="myCustomTable" class="table table-bordered table-hover align-middle">
+            <thead class="table-light">
                 <tr>
-                    <th class="px-6 py-3">Name</th>
-                    <th class="px-6 py-3">Email</th>
-                    <th class="px-6 py-3">Roles</th>
-                    <th class="px-6 py-3">Status</th>
-                    <th class="px-6 py-3">Actions</th>
+                    <th scope="col">{{ __('Name') }}</th>
+                    <th scope="col">{{ __('Email') }}</th>
+                    <th scope="col">{{ __('Roles') }}</th>
+                    <th scope="col">{{ __('Status') }}</th>
+                    <th scope="col">{{ __('Action') }}</th>
                 </tr>
             </thead>
             <tbody>
                 @forelse ($users as $user)
-                    <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-dark">
-                        <td class="px-6 py-2 text-black">{{ $user->name }}</td>
-                        <td class="px-6 py-2 text-black">{{ $user->email }}</td>
-                        <td class="px-6 py-2 text-black">
-                            <div class="flex flex-wrap gap-2">
+                    <tr>
+                        <td>{{ $user->name }}</td>
+                        <td>{{ $user->email }}</td>
+                        <td>
+                            <div class="d-flex flex-wrap gap-2">
                                 @foreach($user->roles as $role)
-                                    <flux:badge>{{ $role->name }}</flux:badge>
+                                    <span class="badge bg-secondary">{{ $role->name }}</span>
                                 @endforeach
                             </div>
                         </td>
-                        <td class="px-6 py-2 text-black">
+                        <td>
                             @if($user->status === 'Active')
-                                <flux:badge class="bg-green-500 text-white" color="green">{{ ucfirst($user->status) }}</flux:badge>
+                                <span class="badge bg-success">{{ ucfirst($user->status) }}</span>
                             @else
-                                <flux:badge class="bg-red-500 text-white" color="red">{{ ucfirst($user->status) }}</flux:badge>
+                                <span class="badge bg-danger">{{ ucfirst($user->status) }}</span>
                             @endif
                         </td>
-
-                        <td class="px-6 py-2 flex flex-wrap gap-2 items-center">
-                        @can('User Edit')
-                            <a href="{{ route('users.edit', $user->id) }}" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg">Edit</a>
-                        @endcan
-                            @if(auth()->id() !== $user->id)
-                            @can('User Delete')
-                                <button onclick="confirmDelete({{ $user->id }}, '{{ $user->name }}')" class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg">Delete</button>
-                            @endcan
-                        @else
-                         
-                        @endif
-                          @if (auth()->id() !== $user->id)
-                            @if (auth()->user()->is_admin)
-                                <form method="POST" action="{{ route('admin.switchUser', $user->id) }}">
-                                    @csrf
-                                    <button type="submit" class="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 px-4 rounded-lg">
-                                        Switch
-                                    </button>
-                                </form>
-                            @endif
-                        @else
-                        @endif
+                        <td>
+                            <div class="d-flex gap-2">
+                                @can('User Edit')
+                                    <a href="{{ route('users.edit', $user->id) }}" class="btn btn-sm btn-primary">
+                                        {{ __('Edit') }}
+                                    </a>
+                                @endcan
+                                @if(auth()->id() !== $user->id)
+                                    @can('User Delete')
+                                        <button onclick="confirmDelete({{ $user->id }}, '{{ $user->name }}')" class="btn btn-sm btn-danger">
+                                            {{ __('Delete') }}
+                                        </button>
+                                    @endcan
+                                @endif
+                                @if(auth()->id() !== $user->id && auth()->user()->is_admin)
+                                    <form method="POST" action="{{ route('admin.switchUser', $user->id) }}">
+                                        @csrf
+                                        <button type="submit" class="btn btn-sm btn-warning">
+                                            {{ __('Switch') }}
+                                        </button>
+                                    </form>
+                                @endif
+                            </div>
                         </td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="5" class="px-6 py-4 text-center text-gray-500 dark:text-gray-400">
-                            No users found..
+                        <td colspan="5" class="text-center text-muted">
+                            {{ __('No users found..') }}
                         </td>
                     </tr>
                 @endforelse
@@ -76,8 +79,7 @@
 </div>
 <script>
     $(document).ready(function() {
-        $('#myCustomTable').DataTable({
-        });
+        $('#myCustomTable').DataTable();
     });
     function confirmDelete(userId, userName) {
         Swal.fire({

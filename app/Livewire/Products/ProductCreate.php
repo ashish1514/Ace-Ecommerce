@@ -24,38 +24,45 @@ class ProductCreate extends Component
             'description' => 'required|string',
             'shortdescription' => 'required|string',
             'price' => 'required|numeric|min:0',
-            'image' => 'nullable|image|max:1024', 
-            'gallery_temp.*' => 'nullable|image|max:2048',
+            'image' => 'required|image|max:1024', 
+            'gallery_temp.*' => 'image|max:2048',
             'status' => 'required|in:Active,Inactive',
             'category_id' => 'required|exists:categories,id',
         ]);
 
-        $imagePath = $this->image ? $this->image->store('products', 'public') : null;
-
-        $product = Product::create([
-            'name' => $this->name,
-            'description' => $this->description,
-            'shortdescription' => $this->shortdescription,
-            'price' => $this->price,
-            'image' => $imagePath,
-            'status' => $this->status,
-            'category_id' => $this->category_id,
-        ]);
-
-        if ($this->gallery_temp && count($this->gallery_temp)) {
-            foreach ($this->gallery_temp as $galleryImage) {
-                $galleryPath = $galleryImage->store('products/gallery', 'public');
-
-                ProductGallery::create([
-                    'product_id' => $product->id,
-                    'image' => $galleryPath,
-                ]);
-            }
+        $imagePath = null;
+        if ($this->image) {
+            $imagePath = $this->image->store('products', 'public');
         }
 
-        session()->flash('message', 'Product created successfully.');
+        $product = new Product();
+        $product->name = $this->name;
+        $product->description = $this->description;
+        $product->shortdescription = $this->shortdescription;
+        $product->price = $this->price;
+        $product->image = $imagePath;
+        $product->status = $this->status;
+        $product->category_id = $this->category_id;
+        $product->save();
 
+        if (is_array($this->gallery_temp) && count($this->gallery_temp)) {
+            foreach ($this->gallery_temp as $galleryImage) {
+                $galleryPath = $galleryImage->store('products/gallery', 'public');
+                $gallery = new ProductGallery();
+                $gallery->product_id = $product->id;
+                $gallery->image = $galleryPath;
+                $gallery->save();
+            }
+        }
+        session()->flash('success', 'Product created successfully.');
         return redirect()->route('products.index');
+    }
+    public function removeGalleryImage($index)
+    {
+        if (isset($this->gallery_temp[$index])) {
+            unset($this->gallery_temp[$index]);
+            $this->gallery_temp = array_values($this->gallery_temp);
+        }
     }
 
     public function render()
