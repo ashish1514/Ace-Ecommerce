@@ -1,34 +1,35 @@
-Today's Report:
-- Added a new shortdescription field in the product form.
-- Integrated shortdescription into the database schema.
-- Updated the edit form to include the shortdescription field.
-- Modified CreateProduct and EditProduct functionalities to handle the new shortdescription.
+Today's tasks
+Steps:-
+- Added functionality to display the product gallery images.
+- Displayed all assigned product photos based on the ID shown in the product edit form.
+- Implemented drag-and-drop functionality on the product edit page.
+- Users can now drag and drop images to manage the product gallery.
+
+Today's tasks
+Steps:-
+1. Enhanced the sidebar design.
+2. Enhanced the Header design.
+3. Added a new icon to the sidebar.
+4. Corrected all issues found in the sidebar and header.
+5. Change user Create form format in col-md-6
+-  User Create Form.
+-  Edit User From.
+-  User index page.
+6. Change Role Create form format in col-md-6
+-  Role Create Form.
+-  Edit Role From.
+-  Role index page.
+
 
 
 
 Today's tasks
 Steps:-
-1. Created a new database table named ProductsGallery:
-- Store one or more images to each product.
-- id 
-- product_id 'foreign key referencing the Products table'
-- image
-2. Added a Product Gallery field in Product Create form:
-- Add new input or a drag-and-drop.
-- Implemented functionality to select multiple images at once:
-- Users can now choose multiple images in single time.
-- Show all multiple selected images.
-3. Implemented drag-and-drop functionality for uploading images:
-- Enables users to drag images directly from their file explorer into the upload area.
-- implemented JavaScript code.
-4. Updated the ProductCreate controller to support inserting multiple images:
-
-
-
-
-Today's task
-Steps:- 
-1. Update the ProductCreate Form
-- Change the form design/layout.
-- Use col-md-6 for each form field (to organize them in a two-column layout on medium+ screens).
-E-commerce
+1. Change Staff Create form format in col-md-6
+-  Staff Create Form.
+-  Edit Staff From.
+-  Staff index page.
+2. Change Category Create form format in col-md-6
+-  Category Create Form.
+-  Edit Category From.
+-  Category index page.

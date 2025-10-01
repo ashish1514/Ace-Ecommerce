@@ -1,56 +1,13 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        @include('partials.head')
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-        <style>
-            .sidebar {
-                min-width: 250px;
-                max-width: 280px;
-                background: #fff;
-                border-right: 1px solid #e5e7eb;
-                box-shadow: 0 2px 8px rgba(0,0,0,0.02);
-                position: fixed;
-                top: 0;
-                left: 0;
-                height: 100vh;
-                z-index: 1040;
-                overflow-y: auto;
-            }
-            .sidebar .nav-link {
-                color: #333;
-                border-radius: 6px;
-                transition: background 0.15s, color 0.15s;
-                font-weight: 500;
-                padding: 0.65rem 1rem;
-                margin-bottom: 2px;
-            }
-            .sidebar .nav-section-title {
-                font-size: 0.95rem;
-                color: #6c757d;
-                letter-spacing: 0.03em;
-                margin-top: 1.5rem;
-                margin-bottom: 0.5rem;
-                text-transform: uppercase;
-            }
-            .main-content-fixed {
-                margin-left: 250px;
-                /* If you change sidebar min-width, update this value */
-                width: calc(100% - 250px);
-            }
-            @media (max-width: 991.98px) {
-                .sidebar {
-                    position: static;
-                    height: auto;
-                    min-width: 100%;
-                    max-width: 100%;
-                }
-                .main-content-fixed {
-                    margin-left: 0;
-                    width: 100%;
-                }
-            }
-        </style>
+@include('partials.head')
+<style>
+.sidebar {min-width: 250px;max-width: 280px;background: #fff;border-right: 1px solid #e5e7eb;box-shadow: 0 2px 8px rgba(0,0,0,0.02);position: fixed;top: 0;left: 0;height: 100vh;z-index: 1040;overflow-y: auto;}
+.sidebar .nav-link {color: #333;border-radius: 6px;transition: background 0.15s, color 0.15s;font-weight: 500;padding: 0.65rem 1rem;margin-bottom: 2px;}
+.sidebar .nav-section-title {font-size: 0.95rem;color: #6c757d;letter-spacing: 0.03em;margin-top: 1.5rem;margin-bottom: 0.5rem;text-transform: uppercase;}
+.main-content-fixed {margin-left: 250px;width: calc(100% - 250px);}
+@media (max-width: 991.98px)
+{.sidebar {position: static;height: auto;min-width: 100%;max-width: 100%;}
+.main-content-fixed {margin-left: 0;width: 100%;}}
+</style>
     </head>
     <body>
         <div class="d-flex flex-row min-vh-100">
