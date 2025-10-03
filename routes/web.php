@@ -29,7 +29,7 @@ Route::get('users/{id}/edit', UserEdit::class)->name('users.edit')->middleware("
 Route::get('products', ProductIndex::class)->name('products.index')->middleware("permission:Product Show|Product Add|Product Edit|Product Delete");
 Route::get('products/create', ProductCreate::class)->name('products.create')->middleware("permission:Product Add");
 Route::get('products/{id}/edit', ProductEdit::class)->name('products.edit')->middleware("permission:Product Edit");
-
+Route::get('products/{id}', [ProductController::class, 'show'])->name('products.show');
 Route::get('roles', RolesIndex::class)->name('roles.index')->middleware("permission:Role Show|Role Add|Role Edit|Role Delete");
 Route::get('roles/create', RolesCreate::class)->name('roles.create')->middleware("permission:Role Add");
 Route::get('roles/{id}/edit', RolesEdit::class)->name('roles.edit')->middleware("permission:Role Edit");
@@ -56,12 +56,5 @@ Route::post('/cart/add/{id}', [CartController::class, 'add'])->name('cart.add');
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
 Route::post('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
 Route::post('/cart/update/{id}', [CartController::class, 'update'])->name('cart.update');
-
-Route::middleware(['auth'])->group(function () {
-    Route::redirect('settings', 'settings/profile');
-    Volt::route('settings/profile', 'settings.profile')->name('settings.profile');
-    Volt::route('settings/password', 'settings.password')->name('settings.password');
-    Volt::route('settings/appearance', 'settings.appearance')->name('settings.appearance');
-});
 
 require __DIR__.'/auth.php';
