@@ -12,7 +12,7 @@
                     <tr>
                         <th>Product</th>
                         <th>Price</th>
-                        <th width="120">Quantity</th>
+                        <th>Quantity</th>
                         <th>Total</th>
                         <th>Action</th>
                     </tr>
@@ -24,7 +24,7 @@
                                 {{ $item['product']->name }}
                             </td>
                             <td>
-                                ${{ number_format($item['product']->price, 2) }}
+                                ₹{{ number_format($item['product']->price, 2) }}
                             </td>
                             <td>
                                 <form action="{{ route('cart.update', $item['product']->id) }}" method="POST" class="d-flex">
@@ -34,7 +34,7 @@
                                 </form>
                             </td>
                             <td>
-                                ${{ number_format($item['product']->price * $item['quantity'], 2) }}
+                                ₹{{ number_format($item['product']->price * $item['quantity'], 2) }}
                             </td>
                             <td>
                                 <form action="{{ route('cart.remove', $item['product']->id) }}" method="POST">
@@ -46,7 +46,7 @@
                     @endforeach
                     <tr>
                         <td colspan="3" class="text-end"><strong>Total:</strong></td>
-                        <td colspan="2"><strong>${{ number_format($total, 2) }}</strong></td>
+                        <td colspan="2"><strong>₹{{ number_format($total, 2) }}</strong></td>
                     </tr>
                 </tbody>
             </table>

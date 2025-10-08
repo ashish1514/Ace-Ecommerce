@@ -11,6 +11,7 @@ use App\Http\Controllers\EditProfileController;
 use App\Livewire\Staff\{StaffCreate, StaffEdit};
 use App\Livewire\Staff\StaffIndex;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\WishlistController;
 
 // Route::get('/', function (){
 //     return redirect()->route('login');
@@ -52,9 +53,19 @@ Route::middleware('auth')->group(function () {
     Route::put('/profile/update', [EditProfileController::class, 'update'])->name('profile.update');
 });
 
-Route::post('/cart/add/{id}', [CartController::class, 'add'])->name('cart.add');
+Route::get('/cart/add/{id}', [CartController::class, 'add'])->name('cart.add');
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
 Route::post('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
 Route::post('/cart/update/{id}', [CartController::class, 'update'])->name('cart.update');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
+    Route::post('/wishlist/add/{productId}', [WishlistController::class, 'add'])->name('wishlist.add');
+    Route::post('/wishlist/remove/{productId}', [WishlistController::class, 'remove'])->name('wishlist.remove');
+
+    Route::post('/wishlist/add-to-cart-and-remove/{productId}', [WishlistController::class, 'addToCartAndRemove'])
+        ->name('wishlist.addToCartAndRemove');
+});
+
 
 require __DIR__.'/auth.php';

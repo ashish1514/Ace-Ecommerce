@@ -1,36 +1,74 @@
-Today's tasks
-Steps:-
-- Added functionality to display the product gallery images.
-- Displayed all assigned product photos based on the ID shown in the product edit form.
-- Implemented drag-and-drop functionality on the product edit page.
-- Users can now drag and drop images to manage the product gallery.
+<!-- Create Product page.
+- I we create a single product page.
+- get one by one with its id get all the products.
+- Show all products from the database.
+- Add in this Add to cart button. -->
+
+Today's task
+1. Create Product Page
+- Build a dedicated Single Product Page for displaying individual product details.
+- Implemented logic to fetch a single product by its ID from the database.
+- Set up functionality to retrieve and display all products from the database.
+- Designed and displayed product details including title, price, description, etc.
+- Added an “Add to Cart” button for each product to enable shopping cart functionality.
+- Fully functional product page showing individual product details and allowing users to add items to the cart.
 
 
-Today's tasks
-Steps:-
-1. Enhanced the sidebar design.
-2. Enhanced the Header design.
-3. Added a new icon to the sidebar.
-4. Corrected all issues found in the sidebar and header.
-5. Change user Create form format in col-md-6
--  User Create Form.
--  Edit User From.
--  User index page.
-6. Change Role Create form format in col-md-6
--  Role Create Form.
--  Edit Role From.
--  Role index page.
+Today's task
+Show product gallery images.
+1. Show Product Gallery Images
+- Objective: Display a gallery of product images for better user experience and product presentation.
+- Implemented logic to fetch all product gallery images from the database.
+- Designed a clean and responsive layout for showcasing images (grid, carousel, etc.).
+- Ensured each product’s gallery is displayed correctly with its respective images.
+- A well-structured gallery section showing all images related to each product in an organized and visually appealing way.
+
+
+
+Today's task
+steps:-
+1. Fix the issue
+- Enhance or increase the hover effect (make it more noticeable or effective).
+2. Verify zoom functionality
+- Check if the full zoom effect is working properly across all elements/pages.
+
+
+
+Today's task
+- Add a new button profuct add to wishlist.
+- Add  its css and make correct its design.
+- R&D About how to add the product in the wishlist.
+- Create a new controller to controle the wishlist logics.
+- Create a model.
+- create a new database table name is wishlists.
+Add coloums in the database.
+- user_id
+- product_id
+these ids are forgen keys of the product and user table.
 
 
 
 
-Today's tasks
-Steps:-
-1. Change Staff Create form format in col-md-6
--  Staff Create Form.
--  Edit Staff From.
--  Staff index page.
-2. Change Category Create form format in col-md-6
--  Category Create Form.
--  Edit Category From.
--  Category index page.
+
+
+Today's task
+steps:-
+- Implemented the functionality to add products to the wishlist.
+- Created a new Wishlist view page.
+- Fetched all wishlist items from the database.
+- Displayed all wishlist items on the view page.
+
+
+
+
+
+Today's task
+steps:-
+- Add a new "Add to Wishlist" button for products.
+- Implement appropriate CSS styling and ensure the design is correct.
+- Perform R&D on how to add a product to the wishlist.
+- Create a new controller to handle wishlist logic.
+- Create a model for the wishlist.
+- Create a new database table named wishlists with the following columns:
+- user_id – foreign key referencing the users table.
+- product_id – foreign key referencing the products table.
