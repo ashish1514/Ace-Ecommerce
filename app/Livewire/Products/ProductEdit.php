@@ -14,7 +14,7 @@ class ProductEdit extends Component
     use WithFileUploads;
 
     public $product;
-    public $name, $description, $shortdescription, $status = 'Active', $price;
+    public $name, $description, $shortdescription, $status = 'Active', $price, $quantity;
     public $category_id;
     public $image;
     public $gallery_temp = [];
@@ -31,6 +31,7 @@ class ProductEdit extends Component
         $this->price = $this->product->price;
         $this->category_id = $this->product->category_id;
         $this->status = $this->product->status;
+        $this->quantity = $this->product->quantity;
         $this->oldImage = $this->product->image;
         $this->oldImageUrl = $this->oldImage ? asset('storage/' . $this->oldImage) : null;
         $this->productGallery = ProductGallery::where('product_id', $this->product->id)->get();
@@ -46,6 +47,7 @@ class ProductEdit extends Component
             'image' => 'nullable|image|max:1024',
             'gallery_temp.*' => 'nullable|image|max:2048',
             'status' => 'required|in:Active,Inactive',
+            'quantity' => 'required',
             'category_id' => 'required|exists:categories,id',
         ]);
 
@@ -63,6 +65,7 @@ class ProductEdit extends Component
         $this->product->price = $this->price;
         $this->product->image = $imagePath;
         $this->product->status = $this->status;
+        $this->product->quantity = $this->quantity;
         $this->product->category_id = $this->category_id;
         $this->product->save();
 

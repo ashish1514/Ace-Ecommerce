@@ -10,7 +10,6 @@ main { margin: 9%; }
 #mainImage {width: 100%;height: 100%;object-fit: contain;transition: transform 0.2s ease;cursor: crosshair;}
 #mainImage.zoomed {transform: scale(2.2);box-shadow: 0 4px 20px rgba(0,0,0,0.15);}
 </style>
-
 <div class="container">
     <div class="row">
         <div class="col-md-6 mb-4">

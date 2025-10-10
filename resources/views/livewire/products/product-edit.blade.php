@@ -41,7 +41,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                             <label for="category_id" class="form-label">Category</label>
                             <select wire:model.defer="category_id" id="category_id" class="form-select @error('category_id') is-invalid @enderror">
                                 <option value="">-- Select Category --</option>
@@ -50,6 +50,11 @@
                                 @endforeach
                             </select>
                             @error('category_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                        </div>
+                        <div class="col-md-6">
+                                <label for="quantity" class="form-label">Quantity</label>
+                                <input wire:model.defer="quantity" type="number" id="quantity" class="form-control @error('quantity') is-invalid @enderror" autocomplete="off" />
+                                @error('quantity') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
                     </div>
                 </div>

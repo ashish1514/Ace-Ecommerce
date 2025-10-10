@@ -11,8 +11,7 @@ use App\Models\ProductGallery;
 class ProductCreate extends Component
 {
     use WithFileUploads;
-
-    public $name, $description, $shortdescription, $status = 'Active', $price;
+    public $name, $description, $shortdescription, $status = 'Active', $price, $quantity;
     public $category_id;
     public $image;
     public $gallery_temp = []; 
@@ -26,6 +25,7 @@ class ProductCreate extends Component
             'price' => 'required|numeric|min:0',
             'image' => 'required|image|max:1024', 
             'gallery_temp.*' => 'image|max:2048',
+            'quantity' => 'required',
             'status' => 'required|in:Active,Inactive',
             'category_id' => 'required|exists:categories,id',
         ]);
@@ -42,6 +42,7 @@ class ProductCreate extends Component
         $product->price = $this->price;
         $product->image = $imagePath;
         $product->status = $this->status;
+        $product->quantity = $this->quantity;
         $product->category_id = $this->category_id;
         $product->save();
 

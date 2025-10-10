@@ -4,73 +4,145 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Product;
+use App\Models\Cart;
+use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
 {
     public function index(Request $request)
     {
-        $cart = session()->get('cart', []);
-        $cartItems = [];
-        $total = 0;
+        $user = Auth::user();
 
-        foreach ($cart as $id => $item) {
-            $product = Product::find($id);
-            if ($product) {
-                $cartItems[] = [
-                    'product' => $product,
-                    'quantity' => $item['quantity'],
-                ];
-                $total += $product->price * $item['quantity'];
-            }
+        if (!$user) {
+            return redirect()->route('login')->with('error', 'Please log in to view your cart.');
         }
 
+        $cartItems = Cart::with('product') 
+            ->where('user_id', $user->id)
+            ->get();
+
+        $total = $cartItems->sum(function ($item) {
+            return optional($item->product)->price * $item->quantity;
+        });
+      
         return view('livewire.cart.index', compact('cartItems', 'total'));
     }
 
-    public function add(Request $request, $id)
+   public function add(Request $request, $id)
     {
+        $user = Auth::user();
         $product = Product::findOrFail($id);
 
-        $cart = session()->get('cart', []);
+        $cartItem = Cart::where('user_id', $user->id)
+            ->where('product_id', $product->id)
+            ->first();
 
-        if (isset($cart[$id])) {
-            $cart[$id]['quantity']++;
+        if ($cartItem) {
+            if ($cartItem->quantity >= $product->quantity) {
+                return redirect()->back()->with('error', 'Not enough stock available');
+            }
+
+            $cartItem->increment('quantity');
         } else {
-            $cart[$id] = [
-                'quantity' => 1,
-            ];
+            Cart::create([
+                'user_id'    => $user->id,
+                'product_id' => $product->id,
+                'quantity'   => 1,
+            ]);
         }
 
-        session()->put('cart', $cart);
+        $cartCount = Cart::where('user_id', $user->id)->count();
+
+        if ($request->ajax()) {
+            return response()->json([
+                'status'     => 'success',
+                'message'    => 'Product added to cart!',
+                'cart_count' => $cartCount,
+            ]);
+        }
 
         return redirect()->back()->with('success', 'Product added to cart!');
     }
 
+
     public function remove(Request $request, $id)
     {
-        $cart = session()->get('cart', []);
+        $user = Auth::user();
 
-        if (isset($cart[$id])) {
-            unset($cart[$id]);
-            session()->put('cart', $cart);
+        Cart::where('user_id', $user->id)
+            ->where('product_id', $id)
+            ->delete();
+
+        $cartCount = Cart::where('user_id', $user->id)->count();
+      
+        if ($request->ajax()) {
+            return response()->json([
+                'status'     => 'success',
+                'message'    => 'Product removed from cart!',
+                'cart_count' => $cartCount,
+            ]);
         }
 
         return redirect()->back()->with('success', 'Product removed from cart!');
     }
 
-    public function update(Request $request, $id)
-    {
-        $request->validate([
-            'quantity' => 'required|integer|min:1'
-        ]);
+     public function update(Request $request, $id)
+{
+    $request->validate([
+        'quantity' => 'required|integer|min:0', // allow 0 to enable removal
+    ]);
 
-        $cart = session()->get('cart', []);
+    $user = Auth::user();
 
-        if (isset($cart[$id])) {
-            $cart[$id]['quantity'] = $request->input('quantity');
-            session()->put('cart', $cart);
+    if (!$user) {
+        return redirect()->route('login')->with('error', 'Please log in to update your cart.');
+    }
+
+    $product = Product::find($id);
+
+    if (!$product) {
+        return redirect()->back()->with('error', 'Product not found.');
+    }
+
+    $quantity = (int) $request->input('quantity');
+
+    if ($quantity > $product->quantity) {
+        return redirect()->back()->with('error', 'Requested quantity exceeds available stock.');
+    }
+
+    if ($quantity == 0) {
+        Cart::where('user_id', $user->id)
+            ->where('product_id', $id)
+            ->delete();
+
+        $message = 'Product removed from cart.';
+
+        if ($request->ajax()) {
+            return response()->json([
+                'status' => 'success',
+                'message' => $message,
+                'cart_count' => Cart::where('user_id', $user->id)->count(),
+            ]);
         }
 
-        return redirect()->back()->with('success', 'Cart updated!');
+        return redirect()->back()->with('success', $message);
     }
+
+    $cartItem = Cart::where('user_id', $user->id)
+        ->where('product_id', $id)
+        ->first();
+
+    $cartItem->update(['quantity' => $quantity]);
+
+    if ($request->ajax()) {
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Cart updated!',
+            'cart_count' => Cart::where('user_id', $user->id)->count(),
+        ]);
+    }
+
+    return redirect()->back()->with('success', 'Cart updated!');
+}
+
 }

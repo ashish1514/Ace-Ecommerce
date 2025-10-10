@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('name');
             $table->text('description')->nullable();
             $table->text('shortdescription');
+            $table->integer('quantity');
             $table->decimal('price', 10, 2);
             $table->text('image');
             $table->string('status')->default('Active');

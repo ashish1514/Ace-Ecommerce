@@ -60,8 +60,8 @@ Route::post('/cart/update/{id}', [CartController::class, 'update'])->name('cart.
 
 Route::middleware('auth')->group(function () {
     Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
-    Route::post('/wishlist/add/{productId}', [WishlistController::class, 'add'])->name('wishlist.add');
-    Route::post('/wishlist/remove/{productId}', [WishlistController::class, 'remove'])->name('wishlist.remove');
+    Route::post('wishlist/add/{id}', [WishlistController::class, 'add'])->name('wishlist.add');
+Route::post('wishlist/remove/{id}', [WishlistController::class, 'remove'])->name('wishlist.remove');
 
     Route::post('/wishlist/add-to-cart-and-remove/{productId}', [WishlistController::class, 'addToCartAndRemove'])
         ->name('wishlist.addToCartAndRemove');

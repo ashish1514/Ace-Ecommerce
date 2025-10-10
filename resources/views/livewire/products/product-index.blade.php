@@ -18,6 +18,7 @@
                     <th scope="col">Name</th>
                     <th scope="col">Price</th>
                     <th scope="col">Image</th>
+                    <th scope="col">Quantity</th>
                     <th scope="col">Description</th>
                     <th scope="col">Status</th>
                     <th scope="col">Action</th>
@@ -33,6 +34,7 @@
                                 <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="img-thumbnail" style="height: 40px; width: 40px; object-fit: cover;">
                             @endif
                         </td>
+                        <td>{{ $product->quantity }}</td>
                         <td>{{ $product->description }}</td>
                         <td>
                             @if($product->status === 'Active')

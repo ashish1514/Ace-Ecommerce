@@ -1,15 +1,38 @@
 @extends('frontend.layouts.frontend')
 @section('content')
 <style>
-.card:hover { transform: scale(1.02); box-shadow: 0 4px 20px rgba(0,0,0,0.1); transition: all 0.3s ease-in-out; }
+.card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    transition: all 0.3s ease-in-out;
+}
+.alert {
+    transition: opacity 0.5s ease-out;
+}
 </style>
+
 <main>
     <div class="main">
         <div class="banner mb-4">
             <img src="{{ asset('frontend/assets/banner/banner.jpg') }}" alt="Banner Image" class="img-fluid w-100">
         </div>
+
         <div class="container">
+            @if(session('success'))
+                <div class="alert alert-success alert-dismissible fade show text-center fw-semibold" role="alert">
+                    {{ session('success') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+            @if(session('info'))
+                <div class="alert alert-info alert-dismissible fade show text-center fw-semibold" role="alert">
+                    {{ session('info') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+
             <h2 class="mb-5 text-center fw-bold" style="letter-spacing: 2px; color: #333;">Our Products</h2>
+
             <div class="row g-4">
                 @forelse($products as $product)
                     <div class="col-12 col-sm-6 col-md-4 d-flex">
@@ -20,6 +43,7 @@
                                 @else
                                     <span class="text-muted">No Image</span>
                                 @endif
+
                                 @php
                                     $inWishlist = false;
                                     if(auth()->check()) {
@@ -28,21 +52,36 @@
                                             ->exists();
                                     }
                                 @endphp
-                                <form method="POST" action="{{ $inWishlist ? route('wishlist.remove', $product->id) : route('wishlist.add', $product->id) }}" class="position-absolute top-0 end-0 m-2">
+
+                                <form method="POST"
+                                      action="{{ $inWishlist ? route('wishlist.remove', $product->id) : route('wishlist.add', $product->id) }}"
+                                      class="wishlist-form position-absolute top-0 end-0 m-2"
+                                      data-product-id="{{ $product->id }}"
+                                      data-in-wishlist="{{ $inWishlist ? 'true' : 'false' }}">
                                     @csrf
                                     <button type="submit" class="btn p-1 border-0" style="box-shadow: none;">
                                         @if($inWishlist)
                                             <svg width="22" height="22" fill="#e74c3c" viewBox="0 0 24 24">
-                                                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41 0.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                                                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 
+                                                         2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 
+                                                         4.5 2.09C13.09 3.81 14.76 3 
+                                                         16.5 3 19.58 3 22 5.42 22 
+                                                         8.5c0 3.78-3.4 6.86-8.55 
+                                                         11.54L12 21.35z"/>
                                             </svg>
                                         @else
                                             <svg width="22" height="22" fill="none" stroke="#e74c3c" stroke-width="2" viewBox="0 0 24 24">
-                                                <path d="M20.8 4.6c-1.5-1.4-3.9-1.4-5.4 0l-.4.4-.4-.4c-1.5-1.4-3.9-1.4-5.4 0-1.6 1.5-1.6 4 0 5.5l5.8 5.7 5.8-5.7c1.6-1.5 1.6-4 0-5.5z"/>
+                                                <path d="M20.8 4.6c-1.5-1.4-3.9-1.4-5.4 
+                                                         0l-.4.4-.4-.4c-1.5-1.4-3.9-1.4-5.4 
+                                                         0-1.6 1.5-1.6 4 0 5.5l5.8 
+                                                         5.7 5.8-5.7c1.6-1.5 
+                                                         1.6-4 0-5.5z"/>
                                             </svg>
                                         @endif
                                     </button>
                                 </form>
                             </div>
+
                             <div class="card-body d-flex flex-column p-4">
                                 <h6 class="card-subtitle mb-2 text-muted text-truncate" title="{{ $product->shortdescription }}">
                                     {{ $product->shortdescription }}
@@ -57,8 +96,9 @@
                                         ₹{{ number_format($product->price, 2) }}
                                     </span>
                                 </div>
-                                
-                                <a href="{{ route('cart.add', $product->id) }}"><button type="submit" class="btn btn-primary w-100">Add to Cart</button></a>
+                                <a href="{{ route('cart.add', $product->id) }}">
+                                    <button type="submit" class="btn btn-primary w-100">Add to Cart</button>
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -71,4 +111,32 @@
         </div>
     </div>
 </main>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(function() {
+    $('.wishlist-form').on('submit', function(e) {
+        e.preventDefault();
+        const form = $(this);
+        const url = form.attr('action');
+        const formData = form.serialize();
+
+        $.ajax({
+            url: url,
+            type: "POST",
+            data: formData,
+            success: function() {
+                location.reload();
+            },
+            error: function(xhr) {
+                if (xhr.status === 401) {
+                    window.location.href = "{{ route('login') }}";
+                } else {
+                    alert('Something went wrong. Please try again.');
+                }
+            }
+        });
+    });
+});
+</script>
 @endsection

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Wishlist;
 use App\Models\Product;
+use App\Models\Cart;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -49,28 +50,36 @@ class WishlistController extends Controller
 
     public function addToCartAndRemove($productId, Request $request)
     {
-        $product = Product::findOrFail($productId);
+        $user = $request->user();
 
-        $cart = session()->get('cart', []);
-
-        if (isset($cart[$productId])) {
-            $cart[$productId]['quantity']++;
-        } else {
-            $cart[$productId] = [
-                'quantity' => 1,
-                'name' => $product->name,
-                'price' => $product->price,
-            ];
+        if (!$user) {
+            return redirect()->route('login')->with('error', 'Please log in first.');
         }
 
-        session()->put('cart', $cart);
+        $product = Product::findOrFail($productId);
 
-        $user = $request->user();
-        $user->wishlist()->detach($productId); 
+        $cartItem = Cart::where('user_id', $user->id)
+            ->where('product_id', $productId)
+            ->first();
+
+        if ($cartItem) {
+            $cartItem->increment('quantity');
+        } else {
+            Cart::create([
+                'user_id'    => $user->id,
+                'product_id' => $product->id,
+                'quantity'   => 1,
+            ]);
+        }
+
+        Wishlist::where('user_id', $user->id)
+            ->where('product_id', $productId)
+            ->delete();
 
         return redirect()->route('wishlist.index')
             ->with('success', 'Product added to cart and removed from wishlist.');
     }
+
 
 
 

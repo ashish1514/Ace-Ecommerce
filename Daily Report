@@ -61,14 +61,33 @@ steps:-
 
 
 
+Today's task
+steps:-
+- Wishlist Page Functionality
+- Display all products  images added to the wishlist.
+- Add an "Add to Cart" button on each wishlist item.
+- Add a "Remove" button to delete items from the wishlist.
+- Implement functionality:
+When a user clicks on "Add to Cart", the product is removed from the wishlist and added to the cart.
+- When a user clicks on "Remove" Button then product is remove from the wishlist
+
+
 
 Today's task
 steps:-
-- Add a new "Add to Wishlist" button for products.
-- Implement appropriate CSS styling and ensure the design is correct.
-- Perform R&D on how to add a product to the wishlist.
-- Create a new controller to handle wishlist logic.
-- Create a model for the wishlist.
-- Create a new database table named wishlists with the following columns:
-- user_id – foreign key referencing the users table.
-- product_id – foreign key referencing the products table.
+- I we add the heart icon in the all product button.
+- Add functionlty for user can add the product in the wishlist.
+- Add functionlty for click on the heart icon add the product in the wishlist.
+- Add functionlty for click on the heart icon u can remove the product from the wishlist.
+- Add functionlty for if user are click on the heart icon and add the product in the wishlist then add chnge heart color white to red.
+- add functionlty for if user want to remove the product from the wishlist with open wishlist page user can remove the product from the same product table.
+- Add wishlist heart icon in the product single page.
+- user can add from same click on heart icon.
+- user can delte product from the wishlist with click on same icon.
+- i we add the functionlty in this if a product are added in the wishlist page then show heart in red color. else not select the any product then show heart without color .
+
+
+
+
+Today's task
+steps:-
