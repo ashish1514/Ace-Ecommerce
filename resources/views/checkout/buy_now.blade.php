@@ -1,9 +1,7 @@
 @extends('frontend.layouts.frontend')
 @section('content')
 <style>
-.container {
-    margin-top: 7%;
-}
+.container {margin-top: 7%;}
 </style>
 <div class="container">
     <div class="row">
@@ -32,15 +30,15 @@
 
                         <div class="mb-3">
                             <label for="address" class="form-label">Shipping Address</label>
-                            <input type="text" name="address" id="address" class="form-control" placeholder="123 Main St" required>
+                            <input type="text" name="address" id="address" class="form-control" required>
                         </div>
 
                         <div class="mb-4">
                             <label for="payment_method" class="form-label">Payment Method</label>
                             <select name="payment_method" id="payment_method" class="form-select" required>
                                 <option value="">Select a method</option>
-                                <option value="credit_card">Credit Card</option>
-                                <option value="paypal">PayPal</option>
+                                <!-- <option value="credit_card">Credit Card</option>
+                                <option value="paypal">PayPal</option> -->
                                 <option value="cod">Cash on Delivery</option>
                             </select>
                         </div>
