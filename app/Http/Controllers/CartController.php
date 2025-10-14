@@ -12,11 +12,6 @@ class CartController extends Controller
     public function index(Request $request)
     {
         $user = Auth::user();
-
-        if (!$user) {
-            return redirect()->route('login')->with('error', 'Please log in to view your cart.');
-        }
-
         $cartItems = Cart::with('product') 
             ->where('user_id', $user->id)
             ->get();
@@ -39,7 +34,7 @@ class CartController extends Controller
 
         if ($cartItem) {
             if ($cartItem->quantity >= $product->quantity) {
-                return redirect()->back()->with('error', 'Not enough stock available');
+                return redirect()->back()->with('warning', 'Not enough stock available');
             }
 
             $cartItem->increment('quantity');
@@ -89,25 +84,19 @@ class CartController extends Controller
      public function update(Request $request, $id)
 {
     $request->validate([
-        'quantity' => 'required|integer|min:0', // allow 0 to enable removal
+        'quantity' => 'required|integer|min:0',
     ]);
 
     $user = Auth::user();
 
     if (!$user) {
-        return redirect()->route('login')->with('error', 'Please log in to update your cart.');
+        return redirect()->route('login')->with('warning', 'Please log in to update your cart.');
     }
-
     $product = Product::find($id);
-
-    if (!$product) {
-        return redirect()->back()->with('error', 'Product not found.');
-    }
-
     $quantity = (int) $request->input('quantity');
 
     if ($quantity > $product->quantity) {
-        return redirect()->back()->with('error', 'Requested quantity exceeds available stock.');
+        return redirect()->back()->with('warning', 'Requested quantity exceeds available stock.');
     }
 
     if ($quantity == 0) {

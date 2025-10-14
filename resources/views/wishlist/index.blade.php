@@ -1,14 +1,12 @@
 @extends('frontend.layouts.frontend')
-
 @section('content')
 <style>
-.container { margin: 4%; }
+.main { margin: 4%; }
 .table-img { max-height: 80px;object-fit: contain;}
 </style>
 
-<div class="container py-4">
+<div class="main py-4">
     <h2 class="mb-4">My Wishlist</h2>
-
     @if($wishlists->count() > 0)
         <div class="table-responsive">
             <table class="table table-bordered align-middle text-center">

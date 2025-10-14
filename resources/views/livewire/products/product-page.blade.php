@@ -63,13 +63,20 @@ main { margin: 9%; }
                 @endif
             </p>
             <p>{{ $product->description ?? 'No description available.' }}</p>
-            <a href="{{ route('cart.add', $product->id) }}">
-                <button class="btn btn-primary">Add to Cart</button>
-            </a>
-            <button class="btn btn-success">Buy Now</button>
-            
-
-            <!-- <button id="wishlistBtn" class="btn btn-outline-danger">Add to Wishlist ❤️</button> -->
+            <div class="row">
+                <div class="col-md-6">
+                    <a href="{{ route('cart.add', $product->id) }}">
+                        <button class="btn btn-primary">Add to Cart</button>
+                    </a>
+                </div>
+                <div class="col-md-6">
+                    <form action="{{ route('buy.now') }}" method="POST">
+                        @csrf
+                        <input type="hidden" name="product_id" value="{{ $product->id }}">
+                        <button type="submit" class="btn btn-success ">Buy Now</button>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 </div>

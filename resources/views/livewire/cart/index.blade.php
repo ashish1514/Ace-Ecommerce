@@ -45,11 +45,15 @@
                             </td>
                             <td>₹{{ number_format($item['product']->price * $item['quantity'], 2) }}</td>
                             <td>
-                                <form action="{{ route('cart.remove', $item['product']->id) }}" method="POST">
-                                    @csrf
-                                    <button type="submit" class="btn btn-sm btn-danger">Remove</button>
-                                </form>
-                            </td>
+                            <form action="{{ route('cart.remove', $item['product']->id) }}" method="POST">
+                                @csrf
+                                <button type="submit" class="btn btn-sm btn-danger mb-2">Remove</button>
+                            </form>
+                            <form action="{{ route('buy.now') }}" method="POST">
+                            @csrf
+                            <input type="hidden" name="product_id" value="{{ $item['product']->id }}">
+                            <button type="submit" class="btn btn-sm btn-success">Buy Now</button>
+                            </form>
                         </tr>
                     @endforeach
 
@@ -64,7 +68,6 @@
                 Your cart is empty.
             </div>
         @endif
-
-        <a href="{{ route('home') }}" class="btn btn-secondary mt-3">Continue Shopping</a>
+    <a href="{{ route('home') }}" class="btn btn-secondary mt-3">Continue Shopping</a>
 </div>
 @endsection

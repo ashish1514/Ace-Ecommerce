@@ -12,6 +12,7 @@ use App\Livewire\Staff\{StaffCreate, StaffEdit};
 use App\Livewire\Staff\StaffIndex;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\WishlistController;
+use App\Http\Controllers\BuyNowController;
 
 // Route::get('/', function (){
 //     return redirect()->route('login');
@@ -19,8 +20,8 @@ use App\Http\Controllers\WishlistController;
 // Route::get('/', function () {
 //     return view('welcome');
 // })
-Route::get('/', [ProductController::class, 'frontend'])->name('home');
 
+Route::get('/', [ProductController::class, 'frontend'])->name('home');
 Route::get('/dashboard',[SwitchUserController::class,'dashboard'])->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::get('users', UserIndex::class)->name('users.index')->middleware("permission:User Show|User Add|User Edit|User Delete");
@@ -62,10 +63,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
     Route::post('wishlist/add/{id}', [WishlistController::class, 'add'])->name('wishlist.add');
 Route::post('wishlist/remove/{id}', [WishlistController::class, 'remove'])->name('wishlist.remove');
-
     Route::post('/wishlist/add-to-cart-and-remove/{productId}', [WishlistController::class, 'addToCartAndRemove'])
         ->name('wishlist.addToCartAndRemove');
 });
-
+Route::middleware('auth')->group(function () {
+    Route::post('/buy-now', [BuyNowController::class, 'buyNow'])->name('buy.now');
+    Route::get('/buy-now/checkout', [BuyNowController::class, 'checkout'])->name('buy.now.checkout');
+    Route::post('/buy-now/place-order', [BuyNowController::class, 'placeOrder'])->name('buy.now.placeOrder');
+});
 
 require __DIR__.'/auth.php';
