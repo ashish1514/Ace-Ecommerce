@@ -6,78 +6,72 @@ use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Order;
 use App\Models\OrderItem;
-use App\Models\Cart;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
 
 class BuyNowController extends Controller
 {
     public function buyNow(Request $request)
     {
-        $product = Product::findOrFail($request->product_id);
-        $cart = Cart::where('user_id', auth()->id())
-                    ->where('product_id', $product->id)
-                    ->first();
-        Session::forget('buy_now_product');
-        Session::put('buy_now_product', [
-            'product_id' => $product->id,
-            'name'       => $product->name,
-            'price'      => $product->price,
-            'address'    => $product->address,
-            'quantity'   => $cart->quantity,
-        ]);
-
-
-        return redirect()->route('buy.now.checkout');
+        return redirect()->route('buy.now.checkout', ['product_id' => $request->product_id]);
     }
-
-    public function checkout()
+    public function checkout(Request $request)
     {
-        $product = Session::get('buy_now_product');
-
-        if (!$product) {
-            return redirect()->back()->with('error', 'No product selected for Buy Now.');
-        }
-
+        $product = Product::findOrFail($request->product_id);
         return view('checkout.buy_now', compact('product'));
     }
+    public function placeOrder(Request $request)
+    {
+        if (!Auth::check()) {
+            return redirect()->route('login')->with('error', 'Please login to place an order.');
+        }
+        $validated = $request->validate([
+            'product_id'     => 'required|exists:products,id',
+            'full_name'      => 'required',
+            'email'          => 'required|email',
+            'phone'          => 'required',
+            'address'        => 'required',
+            'city'           => 'required',
+            'postal_code'    => 'required',
+            'payment_method' => 'required',
+            'quantity'       => 'required|integer|min:1',
+        ]);
 
-  public function placeOrder(Request $request)
-{
-    $product = Session::get('buy_now_product');
+        $product = Product::findOrFail($validated['product_id']);
+        $quantity = $validated['quantity'];
 
-    if (!$product) {
-        return redirect()->route('home')->with('error', 'No product in session.');
+        $orderedQty = OrderItem::where('product_id', $product->id)
+                        ->whereHas('order', function($q){
+                            $q->where('status', 'complete');
+                        })
+                        ->sum('quantity');
+
+        $remaining = $product->quantity - $orderedQty;
+
+        if ($quantity > $remaining) {
+            return back()->with('error', 'Only ' . $remaining . ' item(s) left in stock.');
+        }
+
+        $order = Order::create([
+            'user_id'        => Auth::id(),
+            'total'          => $product->price * $quantity,
+            'address'        => $validated['address'],
+            'status'         => 'complete',
+            'full_name'      => $validated['full_name'],
+            'email'          => $validated['email'],
+            'phone'          => $validated['phone'],
+            'city'           => $validated['city'],
+            'postal_code'    => $validated['postal_code'],
+            'payment_method' => $validated['payment_method'],
+        ]);
+
+        OrderItem::create([
+            'order_id'   => $order->id,
+            'product_id' => $product->id,
+            'quantity'   => $quantity,
+            'address'    => $validated['address'],
+            'price'      => $product->price,
+        ]);
+
+        return redirect()->route('home')->with('success', 'Order placed successfully!');
     }
-
-    if (!Auth::check()) {
-        return redirect()->route('login')->with('error', 'Please login to place an order.');
-    }
-
-    $request->validate([
-        'address' => 'required|string|max:255',
-    ]);
-
-    $total = $product['price'] * $product['quantity'];
-
-    $order = Order::create([
-        'user_id' => Auth::id(),
-        'total'   => $total,
-        'address' => $request->input('address'),
-        'status'  => 'complete'
-    ]);
-
-    OrderItem::create([
-        'order_id'   => $order->id,
-        'product_id' => $product['product_id'],
-        'quantity'   => $product['quantity'],
-        'address' => $request->input('address'),
-        'price'      => $product['price'],
-    ]);
-
-    Session::forget('buy_now_product');
-
-    return redirect()->route('home')->with('success', 'Order placed successfully!');
-}
-
 }

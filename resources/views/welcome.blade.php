@@ -1,16 +1,6 @@
 @extends('frontend.layouts.frontend')
 @section('content')
-<style>
-.card:hover {
-    transform: scale(1.02);
-    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-    transition: all 0.3s ease-in-out;
-}
-.alert {
-    transition: opacity 0.5s ease-out;
-}
-</style>
-
+<style>.card:hover {transform: scale(1.02);box-shadow: 0 4px 20px rgba(0,0,0,0.1);transition: all 0.3s ease-in-out;}</style>
 <main>
     <div class="main">
         <div class="banner mb-4">
@@ -30,9 +20,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             @endif
-
             <h2 class="mb-5 text-center fw-bold" style="letter-spacing: 2px; color: #333;">Our Products</h2>
-
             <div class="row g-4">
                 @forelse($products as $product)
                     <div class="col-12 col-sm-6 col-md-4 d-flex">
@@ -63,7 +51,6 @@
                                     </button>
                                 </form>
                             </div>
-
                             <div class="card-body d-flex flex-column p-4">
                                 <h6 class="card-subtitle mb-2 text-muted text-truncate" title="{{ $product->shortdescription }}">
                                     {{ $product->shortdescription }}
@@ -77,10 +64,32 @@
                                     <span style="font-size: 1.1rem;">
                                         ₹{{ number_format($product->price, 2) }}
                                     </span>
-                                </div>
+                                </div>      
+                                @php
+                                $orderedQty = \App\Models\OrderItem::where('product_id', $product->id)
+                                    ->whereHas('order', function($q) {
+                                        $q->where('status', 'complete');
+                                    })
+                                    ->sum('quantity');
+                                $remaining = $product->quantity - $orderedQty;
+                            @endphp
+
+                            @if($remaining > 0)
                                 <a href="{{ route('cart.add', $product->id) }}">
-                                    <button type="submit" class="btn btn-primary w-100">Add to Cart</button>
+                                    <button type="submit" class="btn btn-primary w-100">
+                                        Add to Cart 
+                                    </button>
                                 </a>
+                            @else
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <button class="btn btn-outline-danger w-100" disabled>Out of Stock</button>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <button class="btn btn-outline-secondary w-100">Notify Me</button>
+                                    </div>
+                                </div>
+                            @endif
                             </div>
                         </div>
                     </div>
@@ -93,7 +102,6 @@
         </div>
     </div>
 </main>
-
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 $(function() {

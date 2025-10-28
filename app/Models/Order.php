@@ -11,6 +11,12 @@ class Order extends Model
         'total',
         'status',
         'address',
+        'full_name',
+        'email',
+        'phone',
+        'city',
+        'postal_code',
+        'payment_method',
     ];
 
     public function user()
@@ -22,5 +28,4 @@ class Order extends Model
     {
         return $this->hasMany(OrderItem::class);
     }
-
 }

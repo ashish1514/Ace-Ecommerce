@@ -45,31 +45,29 @@ Route::get('staff/create', StaffCreate::class)->name('staff.create');
 Route::get('staff/{id}/edit', StaffEdit::class)->name('staff.edit');
 
 Route::middleware(['auth'])->group(function () {
-    Route::post('/admin/switch-user/{user}', [SwitchUserController::class, 'switchTo'])->name('admin.switchUser');
-    Route::get('/admin/switch-back', [SwitchUserController::class, 'switchBack'])->name('admin.switch.back');
+Route::post('/admin/switch-user/{user}', [SwitchUserController::class, 'switchTo'])->name('admin.switchUser');
+Route::get('/admin/switch-back', [SwitchUserController::class, 'switchBack'])->name('admin.switch.back');
 });
 
 Route::middleware('auth')->group(function () {
-    Route::get('/profile/edit', [EditProfileController::class, 'edit'])->name('profile.edit');
-    Route::put('/profile/update', [EditProfileController::class, 'update'])->name('profile.update');
+Route::get('/profile/edit', [EditProfileController::class, 'edit'])->name('profile.edit');
+Route::put('/profile/update', [EditProfileController::class, 'update'])->name('profile.update');
 });
-
+Route::middleware('auth')->group(function () {
 Route::get('/cart/add/{id}', [CartController::class, 'add'])->name('cart.add');
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
 Route::post('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
 Route::post('/cart/update/{id}', [CartController::class, 'update'])->name('cart.update');
-
+});
 Route::middleware('auth')->group(function () {
-    Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
-    Route::post('wishlist/add/{id}', [WishlistController::class, 'add'])->name('wishlist.add');
+Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
+Route::post('wishlist/add/{id}', [WishlistController::class, 'add'])->name('wishlist.add');
 Route::post('wishlist/remove/{id}', [WishlistController::class, 'remove'])->name('wishlist.remove');
-    Route::post('/wishlist/add-to-cart-and-remove/{productId}', [WishlistController::class, 'addToCartAndRemove'])
-        ->name('wishlist.addToCartAndRemove');
+Route::post('/wishlist/add-to-cart-and-remove/{productId}', [WishlistController::class, 'addToCartAndRemove'])->name('wishlist.addToCartAndRemove');
 });
 Route::middleware('auth')->group(function () {
-    Route::post('/buy-now', [BuyNowController::class, 'buyNow'])->name('buy.now');
-    Route::get('/buy-now/checkout', [BuyNowController::class, 'checkout'])->name('buy.now.checkout');
-    Route::post('/buy-now/place-order', [BuyNowController::class, 'placeOrder'])->name('buy.now.placeOrder');
+Route::post('/buy-now', [BuyNowController::class, 'buyNow'])->name('buy.now');
+Route::get('/buy-now/checkout', [BuyNowController::class, 'checkout'])->name('buy.now.checkout');
+Route::post('/buy-now/place-order', [BuyNowController::class, 'placeOrder'])->name('buy.now.placeOrder');
 });
-
 require __DIR__.'/auth.php';

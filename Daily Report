@@ -86,8 +86,100 @@ steps:-
 - user can delte product from the wishlist with click on same icon.
 - i we add the functionlty in this if a product are added in the wishlist page then show heart in red color. else not select the any product then show heart without color .
 
+Today's tasks
+- Added a new "Buy Now" button on the product page to allow users to initiate an instant purchase.
+- Created functionality to redirect the user directly to the checkout page when the "Buy Now"    button is clicked.
+- Developed BuyNowController to:
+- Handle the request.
+- Retrieve product details.
+- Pass data to the checkout view.
+
+<!-- oct 14--------- -->
+Today's tasks
+- Designed and developed the checkout page for direct purchases with the following fields:
+- Product Name – Displays the selected product.
+- Price – Shows the unit price of the product.
+- Quantity – Allows user to confirm or change quantity.
+- Shipping Address – Input form for delivery details.
+- Payment Method – Dropdown or radio buttons to choose payment option.
+
+Today's task
+1. Created orders Table
+- Fields added:
+- user_id – ID of the user placing the order.
+- total – Total price of the order.
+- status – Status of the order pending, completed.
+- address – Shipping address provided by the user.
+2. Created order_items Table
+- Fields added:
+- order_id – References the order the item belongs to.
+- product_id – The ID of the product being purchased.
+- quantity – The number of units of the product.
+- price – The price per unit at the time of purchase.
+- address – Shipping address; typically handled in the orders table.
+
+<!-- oct 15 -->
+Today's task
+Steps:-
+- Log in to your Webflow harjeevan.tanda@gmail.com.
+- Add an E‑commerce template to the project.
+- Setup the template.
+- Add product to cart
+- Go to cart, confirm cart works.
+- Try to proceed to checkout
+- Observe that checkout is not working.
+- buy the e-commerce hosting. 
+- R&D about  how to add crypto payment method in the webflow.
+
+Today's task
+Steps:-
+- Log in to your Webflow “dummy” account (or create one).
+- Add an E‑commerce template to the project.
+- Setup the template.
+- Add a dummy product  into the store.
+- Add product(s) to cart
+- Go to cart, confirm cart works.
+- Try to proceed to checkout
+- Observe that checkout is not working.
+- Do R&D / implementation: enable the checkout functionality.
+Refrence artical:-
+- https://help.webflow.com/hc/en-us/articles/33961389921427-Enable-checkout-and-launch-your-store#add-an-ecommerce-site-plan
+
+
+
+
+- I we show total products in the product table from the database.
+- then add check the product order by Id.
+- add functionlty for if the produt status is completed then and product quantity is greaterthen 100 then desable the add to cart btn and  and show  out of stock .
+- I we get all total product in the product page.
 
 
 
 Today's task
-steps:-
+Steps:-
+- Display the total number of products in the products table from the database.
+- Fetch and display the products ordered by their ID.
+Add functionality to:
+- Disable the "Add to Cart" button if:
+- The product status is "completed", and
+- The product quantity is greater than 100.
+- Show a message like "Out of Stock" in such cases.
+- Retrieve and display all products on the Product Page.
+
+
+Today's task
+Steps:-
+- Added logic in the BuyNowController to:
+- Fetch and display all products ordered by their ID.
+- Display the total number of products from the database.
+- Calculate the ordered quantity and remaining quantity for each product.
+
+
+
+
+
+
+
+
+
+today i we check first 

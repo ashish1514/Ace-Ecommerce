@@ -13,6 +13,7 @@ class OrderItem extends Model
         'price',
         'address',
     ];
+    
     public function order()
     {
         return $this->belongsTo(Order::class);
