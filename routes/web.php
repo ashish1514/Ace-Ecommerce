@@ -13,7 +13,8 @@ use App\Livewire\Staff\StaffIndex;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\BuyNowController;
-
+use App\Http\Controllers\PayPalController;
+  
 // Route::get('/', function (){
 //     return redirect()->route('login');
 // })->name('home');
@@ -70,4 +71,9 @@ Route::post('/buy-now', [BuyNowController::class, 'buyNow'])->name('buy.now');
 Route::get('/buy-now/checkout', [BuyNowController::class, 'checkout'])->name('buy.now.checkout');
 Route::post('/buy-now/place-order', [BuyNowController::class, 'placeOrder'])->name('buy.now.placeOrder');
 });
+
+Route::get('paypal/payment', [PayPalController::class, 'payment'])->name('paypal.payment');
+Route::get('paypal/payment/success', [PayPalController::class, 'paymentSuccess'])->name('paypal.payment.success');
+Route::get('paypal/payment/cancel', [PayPalController::class, 'paymentCancel'])->name('paypal.payment.cancel');
+
 require __DIR__.'/auth.php';

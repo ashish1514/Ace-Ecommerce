@@ -16,7 +16,9 @@
         "livewire/flux": "^2.1.1",
         "livewire/volt": "^1.7.0",
         "masmerise/livewire-toaster": "^2.8",
+        "nwidart/laravel-modules": "^12.0",
         "spatie/laravel-permission": "^6.21",
+        "srmklive/paypal": "^3.0",
         "yoeunes/toastr": "^3.1"
     },
     "require-dev": {
@@ -76,7 +78,8 @@
         "sort-packages": true,
         "allow-plugins": {
             "pestphp/pest-plugin": true,
-            "php-http/discovery": true
+            "php-http/discovery": true,
+            "wikimedia/composer-merge-plugin": true
         }
     },
     "minimum-stability": "stable",

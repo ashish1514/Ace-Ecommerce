@@ -11,9 +11,10 @@
                     <h4 class="mb-0">Buy Now Checkout</h4>
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('buy.now.placeOrder') }}" method="POST">
+                    <form id="checkoutForm" method="POST" action="{{ route('buy.now.placeOrder') }}">
                         @csrf
                         <input type="hidden" name="product_id" value="{{ $product->id }}">
+                        
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Product</label>
@@ -27,6 +28,8 @@
                                 <label for="quantity" class="form-label">Quantity</label>
                                 <input type="number" name="quantity" id="quantity" class="form-control" min="1" value="1" required>
                             </div>
+
+                            <!-- Customer Info -->
                             <div class="col-md-6 mb-3">
                                 <label for="full_name" class="form-label">Full Name</label>
                                 <input type="text" name="full_name" id="full_name" class="form-control" required>
@@ -51,12 +54,11 @@
                                 <label for="postal_code" class="form-label">Postal Code</label>
                                 <input type="text" name="postal_code" id="postal_code" class="form-control" required>
                             </div>
+
                             <div class="col-md-6 mb-3">
-                                <label for="payment_method" class="form-label">Payment Method</label>
-                                <select name="payment_method" id="payment_method" class="form-select" required>
-                                    <option value="">Select a method</option>
-                                    <option value="cod">Cash on Delivery</option>
-                                </select>
+                                <label class="form-label">Payment Method</label><br>
+                                <input type="radio" name="payment_method" value="cod" checked> Cash on Delivery <br>
+                                <input type="radio" name="payment_method" value="paypal"> Pay with PayPal
                             </div>
                         </div>
                         <button type="submit" class="btn btn-success w-100">Place Order</button>
@@ -66,4 +68,17 @@
         </div>
     </div>
 </div>
+
+<script>
+document.getElementById('checkoutForm').addEventListener('submit', function(e) {
+    const paymentMethod = document.querySelector('input[name="payment_method"]:checked').value;
+    const productId = document.querySelector('input[name="product_id"]').value;
+    const quantity = document.querySelector('input[name="quantity"]').value;
+
+    if(paymentMethod === 'paypal') {
+        e.preventDefault(); 
+        window.location.href = `/paypal/payment?product_id=${productId}&quantity=${quantity}`;
+    }
+});
+</script>
 @endsection

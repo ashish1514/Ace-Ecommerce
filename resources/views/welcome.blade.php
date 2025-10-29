@@ -73,7 +73,6 @@
                                     ->sum('quantity');
                                 $remaining = $product->quantity - $orderedQty;
                             @endphp
-
                             @if($remaining > 0)
                                 <a href="{{ route('cart.add', $product->id) }}">
                                     <button type="submit" class="btn btn-primary w-100">
