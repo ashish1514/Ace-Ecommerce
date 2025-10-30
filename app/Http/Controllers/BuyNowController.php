@@ -24,16 +24,18 @@ class BuyNowController extends Controller
         if (!Auth::check()) {
             return redirect()->route('login')->with('error', 'Please login to place an order.');
         }
+
+        
         $validated = $request->validate([
-            'product_id'     => 'required|exists:products,id',
-            'full_name'      => 'required',
-            'email'          => 'required|email',
-            'phone'          => 'required',
-            'address'        => 'required',
-            'city'           => 'required',
-            'postal_code'    => 'required',
-            'payment_method' => 'required',
-            'quantity'       => 'required|integer|min:1',
+            'product_id' => 'required|exists:products,id',
+            'quantity' => 'required|integer|min:1',
+            'address' => 'required|string',
+            'full_name' => 'required|string',
+            'email' => 'required|email',
+            'phone' => 'required|string',
+            'city' => 'required|string',
+            'postal_code' => 'required|string',
+            'payment_method' => 'required|string',
         ]);
 
         $product = Product::findOrFail($validated['product_id']);
@@ -69,7 +71,7 @@ class BuyNowController extends Controller
             'product_id' => $product->id,
             'quantity'   => $quantity,
             'address'    => $validated['address'],
-            'price'      => $product->price,
+            'price'      => $product->price * $quantity,
         ]);
 
         return redirect()->route('home')->with('success', 'Order placed successfully!');

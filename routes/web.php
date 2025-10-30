@@ -72,8 +72,8 @@ Route::get('/buy-now/checkout', [BuyNowController::class, 'checkout'])->name('bu
 Route::post('/buy-now/place-order', [BuyNowController::class, 'placeOrder'])->name('buy.now.placeOrder');
 });
 
-Route::get('paypal/payment', [PayPalController::class, 'payment'])->name('paypal.payment');
-Route::get('paypal/payment/success', [PayPalController::class, 'paymentSuccess'])->name('paypal.payment.success');
-Route::get('paypal/payment/cancel', [PayPalController::class, 'paymentCancel'])->name('paypal.payment.cancel');
+Route::get('/paypal/payment', [PayPalController::class, 'payWithPayPal'])->name('paypal.payment');
+Route::get('/paypal/success', [PayPalController::class, 'paymentSuccess'])->name('paypal.success');
+Route::get('/paypal/cancel', [PayPalController::class, 'paymentCancel'])->name('paypal.cancel');
 
 require __DIR__.'/auth.php';

@@ -79,6 +79,11 @@
                                         Add to Cart 
                                     </button>
                                 </a>
+                                  <form action="{{ route('buy.now') }}" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                    <button type="submit" class="btn btn-warning mt-2 w-100">Buy Now</button>
+                                </form>
                             @else
                                 <div class="row">
                                     <div class="col-md-6">

@@ -49,11 +49,6 @@
                                 @csrf
                                 <button type="submit" class="btn btn-sm btn-danger mb-2">Remove</button>
                             </form>
-                            <form action="{{ route('buy.now') }}" method="POST">
-                            @csrf
-                            <input type="hidden" name="product_id" value="{{ $item['product']->id }}">
-                            <button type="submit" class="btn btn-sm btn-success">Buy Now</button>
-                            </form>
                         </tr>
                     @endforeach
 
@@ -68,6 +63,19 @@
                 Your cart is empty.
             </div>
         @endif
-    <a href="{{ route('home') }}" class="btn btn-secondary mt-3">Continue Shopping</a>
+
+        <div class="d-flex justify-content-between align-items-center mt-4">
+            <a href="{{ route('home') }}" class="btn btn-secondary">
+                Continue Shopping
+            </a>
+            <form action="{{ route('buy.now') }}" method="POST" class="mb-0">
+                @csrf
+                <input type="hidden" name="product_id" value="{{ isset($item['product']->id) ? $item['product']->id : '' }}">
+                <button type="submit" class="btn btn-success px-4">
+                    <i class="fas fa-shopping-cart me-2"></i> Buy Now
+                </button>
+            </form>
+        </div>
+
 </div>
 @endsection

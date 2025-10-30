@@ -1,3 +1,9 @@
+
+
+
+
+
+
 <!-- Create Product page.
 - I we create a single product page.
 - get one by one with its id get all the products.
@@ -223,3 +229,85 @@ Steps:-
 - Implement a new condition in the Buy Now functionality
 - If the total available orders are 100, and a user has already placed 50 completed orders, then the user cannot place more than 50 additional orders.
 - If the user tries to order more than 50 products, the system should display an error message (“Order limit exceeded”).
+
+
+
+Today's task
+Steps:-
+1. Install Stripe Package
+- composer require stripe/stripe-php
+2. Create a Payment Controller
+- PaymentController
+3. Create Blade File
+4. Create PayPal Developer Account
+- Go to https://developer.paypal.com/
+- Log in or sign up for a developer account
+- Create a new app under Sandbox → My Apps & Credentials
+- Get the following credentials:
+- Client ID
+- Client Secret
+5. Add Client ID and Client Secret in the .env File
+
+
+
+
+
+Today's task
+Steps:-
+1. R&D about how to create models in laravel.
+2. Install the Module Package
+- composer require nwidart/laravel-modules
+- php artisan vendor:publish --provider="Nwidart\Modules\LaravelModulesServiceProvider"
+3. create a config file
+4. Create a New Module
+- php artisan module:make Payment
+5. Add Routes for the Module
+6. Create a Controller Paypal payment controller.
+
+
+Today's task
+Steps:-
+- I we add Paypal payment integration.
+- Fix the issues.
+
+
+Today's task
+Steps:-
+1. Add functionlty for if user are buy the product then show to methods first is cash on delivery second is pay with paypal.
+2. If user select cash on delivery then direct buy the prodcut.
+3. If user are select the paypal method then user redirect on the paypal payment method.
+
+
+Today's task
+steps:-
+- Add functionlty for user are order the product if payment is successfull then full detals are store in the database
+
+
+Today's task
+Steps:-
+- Research and explore how to integrate the PayPal payment gateway in Laravel.
+Refrence:- https://youtu.be/jjp5etEGTyM?si=4iAQnK5nxXfXvFOn
+- Add the controller functionality for handling PayPal payments.
+- Add an option for payment using PayPal in the application.
+Status: Pending
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

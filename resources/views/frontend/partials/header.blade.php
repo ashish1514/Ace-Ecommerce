@@ -1,9 +1,12 @@
 <header>
     <nav class="navbar navbar-expand-lg bg-transparent fixed-top">
         <div class="container-fluid d-flex align-items-center">
-            <a class="navbar-brand fw-bold fs-4 text-primary" href="">E-commerce</a>
+            <a class="navbar-brand fw-bold fs-4 text-primary" href="{{ route('home') }}">E-commerce</a>
 
             <ul class="navbar-nav mx-auto mb-2 mb-lg-0 d-flex flex-row gap-3">
+                <li class="nav-item">
+                    <a class="btn fw-semibold text-dark text-uppercase" href="">Shop</a>
+                </li>
                 <li class="nav-item">
                     <a class="btn fw-semibold text-dark text-uppercase" href="{{ route('home') }}">Home</a>
                 </li>
