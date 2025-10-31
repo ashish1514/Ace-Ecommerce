@@ -48,14 +48,6 @@ class CartController extends Controller
 
         $cartCount = Cart::where('user_id', $user->id)->count();
 
-        if ($request->ajax()) {
-            return response()->json([
-                'status'     => 'success',
-                'message'    => 'Product added to cart!',
-                'cart_count' => $cartCount,
-            ]);
-        }
-
         return redirect()->back()->with('success', 'Product added to cart!');
     }
 
@@ -70,68 +62,46 @@ class CartController extends Controller
 
         $cartCount = Cart::where('user_id', $user->id)->count();
       
-        if ($request->ajax()) {
-            return response()->json([
-                'status'     => 'success',
-                'message'    => 'Product removed from cart!',
-                'cart_count' => $cartCount,
-            ]);
-        }
-
+    
         return redirect()->back()->with('success', 'Product removed from cart!');
     }
 
      public function update(Request $request, $id)
-{
-    $request->validate([
-        'quantity' => 'required|integer|min:0',
-    ]);
+    {
+        $request->validate([
+            'quantity' => 'required|integer|min:0',
+        ]);
 
-    $user = Auth::user();
+        $user = Auth::user();
 
-    if (!$user) {
-        return redirect()->route('login')->with('warning', 'Please log in to update your cart.');
-    }
-    $product = Product::find($id);
-    $quantity = (int) $request->input('quantity');
+        if (!$user) {
+            return redirect()->route('login')->with('warning', 'Please log in to update your cart.');
+        }
+        $product = Product::find($id);
+        $quantity = (int) $request->input('quantity');
 
-    if ($quantity > $product->quantity) {
-        return redirect()->back()->with('warning', 'Requested quantity exceeds available stock.');
-    }
-
-    if ($quantity == 0) {
-        Cart::where('user_id', $user->id)
-            ->where('product_id', $id)
-            ->delete();
-
-        $message = 'Product removed from cart.';
-
-        if ($request->ajax()) {
-            return response()->json([
-                'status' => 'success',
-                'message' => $message,
-                'cart_count' => Cart::where('user_id', $user->id)->count(),
-            ]);
+        if ($quantity > $product->quantity) {
+            return redirect()->back()->with('warning', 'Requested quantity exceeds available stock.');
         }
 
-        return redirect()->back()->with('success', $message);
+        if ($quantity == 0) {
+            Cart::where('user_id', $user->id)
+                ->where('product_id', $id)
+                ->delete();
+
+            $message = 'Product removed from cart.';
+
+           
+            return redirect()->back()->with('success', $message);
+        }
+
+        $cartItem = Cart::where('user_id', $user->id)
+            ->where('product_id', $id)
+            ->first();
+
+        $cartItem->update(['quantity' => $quantity]);
+
+
+        return redirect()->back()->with('success', 'Cart updated!');
     }
-
-    $cartItem = Cart::where('user_id', $user->id)
-        ->where('product_id', $id)
-        ->first();
-
-    $cartItem->update(['quantity' => $quantity]);
-
-    if ($request->ajax()) {
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Cart updated!',
-            'cart_count' => Cart::where('user_id', $user->id)->count(),
-        ]);
-    }
-
-    return redirect()->back()->with('success', 'Cart updated!');
-}
-
 }

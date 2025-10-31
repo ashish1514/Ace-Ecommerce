@@ -4,11 +4,11 @@
             <a class="navbar-brand fw-bold fs-4 text-primary" href="{{ route('home') }}">E-commerce</a>
 
             <ul class="navbar-nav mx-auto mb-2 mb-lg-0 d-flex flex-row gap-3">
-                <li class="nav-item">
-                    <a class="btn fw-semibold text-dark text-uppercase" href="">Shop</a>
+                 <li class="nav-item">
+                    <a class="btn fw-semibold text-dark text-uppercase" href="{{ route('home') }}">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="btn fw-semibold text-dark text-uppercase" href="{{ route('home') }}">Home</a>
+                    <a class="btn fw-semibold text-dark text-uppercase" href="{{ route('shop.shop') }}">Shop</a>
                 </li>
                 <li class="nav-item">
                     <a class="btn fw-semibold text-dark text-uppercase" href="#">About</a>

@@ -294,16 +294,38 @@ Status: Pending
 
 
 
+Today's task
+Steps:-
+1. Load All Categories
+- Fetch all product categories from the database to display in the shop sidebar.
+2. Initialize Product Query
+- Start a query to fetch products and eager load their related category data.
+3. Filter Products by Category
+- Check if a category is selected by the user.
+- If yes, filter the products to show only those in the chosen category.
+4. Sort Products by Price
+- Check if the user wants to sort by price.
+- low_high → Sort products from lowest to highest price.
+- high_low → Sort products from highest to lowest price.
+5. Paginate Products
+-  Limit the products displayed per page to make navigation easier.
+6. Pass Data to View
+- Pass the fetched products and categories in the Blade template.
 
 
 
-
-
-
-
-
-
-
+Today's task
+Steps:-
+1. Add Shop button in header.
+2. Create a shop page.
+3. Get in the Data from the controller.
+- Product 
+- Category
+4. Show Product 
+- Image
+- Name
+- Price
+- Category
 
 
 

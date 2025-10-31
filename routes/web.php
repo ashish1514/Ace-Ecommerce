@@ -14,6 +14,8 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\BuyNowController;
 use App\Http\Controllers\PayPalController;
+use App\Http\Controllers\ShopController;
+
   
 // Route::get('/', function (){
 //     return redirect()->route('login');
@@ -72,6 +74,7 @@ Route::get('/buy-now/checkout', [BuyNowController::class, 'checkout'])->name('bu
 Route::post('/buy-now/place-order', [BuyNowController::class, 'placeOrder'])->name('buy.now.placeOrder');
 });
 
+Route::get('/shop/page',[ShopController::class,'index'])->name('shop.shop');
 Route::get('/paypal/payment', [PayPalController::class, 'payWithPayPal'])->name('paypal.payment');
 Route::get('/paypal/success', [PayPalController::class, 'paymentSuccess'])->name('paypal.success');
 Route::get('/paypal/cancel', [PayPalController::class, 'paymentCancel'])->name('paypal.cancel');

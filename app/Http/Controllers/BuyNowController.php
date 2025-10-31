@@ -23,9 +23,7 @@ class BuyNowController extends Controller
     {
         if (!Auth::check()) {
             return redirect()->route('login')->with('error', 'Please login to place an order.');
-        }
-
-        
+        }        
         $validated = $request->validate([
             'product_id' => 'required|exists:products,id',
             'quantity' => 'required|integer|min:1',
