@@ -313,19 +313,60 @@ Steps:-
 - Pass the fetched products and categories in the Blade template.
 
 
-
 Today's task
 Steps:-
-1. Add Shop button in header.
-2. Create a shop page.
-3. Get in the Data from the controller.
-- Product 
-- Category
-4. Show Product 
-- Image
-- Name
-- Price
-- Category
+1. Add a “Select” option on the cart page
+- Add a checkbox beside each product item in the cart.
+- This allows the user to manually select individual products.
+2. Add “Select All” functionality
+- Add a master checkbox (usually at the top of the list).
+- When the user clicks “Select All,” all product checkboxes should automatically be checked.
+- When deselected, all checkboxes should be unchecked.
+3. Add functionality to order multiple selected products at once
+- Allow the user to select one or more products and place a single order for all selected items.
+- Collect the selected product IDs and create-order.
+- Show a  message when the order is placed successfully.
+4. Auto-delete ordered products from the cart
+- After the order is successfully completed:
+- Automatically delete those ordered products from the cart.
+
+
+
+Today's Task
+Steps:-
+1. Redesigen the chekout page.
+- Add in this all product are show in left side.
+- And all user form address information are show in right side 
+
+
+
+
+Today's Task
+Steps:-
+1. I add functionlty if user are first add to cart the product then first product is save to in the cart page and next to be buy now the product then i we add in this if user are add to cart the prodcut and increse the product quantity  then in the checkout page show same increse quantity.
+2. if user are direct buy-now the product then user are direct to buy the product and increse the product quantity from the same page.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Today's Task
+Steps:-
+1. Fixed errors.
+2. I we update the cart page.
+3. Add in the cart page ajax functionlty.
+4. if user are increse the product quantity then this is increse the quantity with the ajax without refresh the page.
+
+
 
 
 

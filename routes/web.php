@@ -56,11 +56,11 @@ Route::middleware('auth')->group(function () {
 Route::get('/profile/edit', [EditProfileController::class, 'edit'])->name('profile.edit');
 Route::put('/profile/update', [EditProfileController::class, 'update'])->name('profile.update');
 });
-Route::middleware('auth')->group(function () {
-Route::get('/cart/add/{id}', [CartController::class, 'add'])->name('cart.add');
-Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
-Route::post('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
-Route::post('/cart/update/{id}', [CartController::class, 'update'])->name('cart.update');
+Route::middleware('auth')->group(function() {
+    Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+    Route::get('/cart/add/{id}', [CartController::class, 'add'])->name('cart.add');
+    Route::post('/cart/update/{id}', [CartController::class, 'update'])->name('cart.update');
+    Route::delete('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
 });
 Route::middleware('auth')->group(function () {
 Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
@@ -74,9 +74,10 @@ Route::get('/buy-now/checkout', [BuyNowController::class, 'checkout'])->name('bu
 Route::post('/buy-now/place-order', [BuyNowController::class, 'placeOrder'])->name('buy.now.placeOrder');
 });
 
-Route::get('/shop/page',[ShopController::class,'index'])->name('shop.shop');
 Route::get('/paypal/payment', [PayPalController::class, 'payWithPayPal'])->name('paypal.payment');
 Route::get('/paypal/success', [PayPalController::class, 'paymentSuccess'])->name('paypal.success');
 Route::get('/paypal/cancel', [PayPalController::class, 'paymentCancel'])->name('paypal.cancel');
+
+Route::get('/shop/page',[ShopController::class,'index'])->name('shop.shop');
 
 require __DIR__.'/auth.php';

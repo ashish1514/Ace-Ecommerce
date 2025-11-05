@@ -62,7 +62,6 @@
                 </div>
             </form>
         </div>
-
         <div class="col-md-9">
             <div class="row g-4">
                 @forelse($products as $product)
@@ -84,6 +83,11 @@
                                 <a href="{{ route('products.show', $product->id) }}" class="btn btn-sm btn-outline-primary mt-auto w-100">
                                     View Details
                                 </a>
+                                    <form action="{{ route('buy.now') }}" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                    <button type="submit" class="btn btn-sm btn-outline-warning mt-2 w-100">Buy Now</button>
+                                </form>
                             </div>
                         </div>
                     </div>

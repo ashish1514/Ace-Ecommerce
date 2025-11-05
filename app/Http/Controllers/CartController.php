@@ -12,18 +12,19 @@ class CartController extends Controller
     public function index(Request $request)
     {
         $user = Auth::user();
-        $cartItems = Cart::with('product') 
+
+        $cartItems = Cart::with('product')
             ->where('user_id', $user->id)
             ->get();
 
         $total = $cartItems->sum(function ($item) {
             return optional($item->product)->price * $item->quantity;
         });
-      
+
         return view('livewire.cart.index', compact('cartItems', 'total'));
     }
 
-   public function add(Request $request, $id)
+    public function add(Request $request, $id)
     {
         $user = Auth::user();
         $product = Product::findOrFail($id);
@@ -34,7 +35,7 @@ class CartController extends Controller
 
         if ($cartItem) {
             if ($cartItem->quantity >= $product->quantity) {
-                return redirect()->back()->with('warning', 'Not enough stock available');
+                return back()->with('warning', 'Not enough stock available');
             }
 
             $cartItem->increment('quantity');
@@ -46,62 +47,69 @@ class CartController extends Controller
             ]);
         }
 
-        $cartCount = Cart::where('user_id', $user->id)->count();
-
-        return redirect()->back()->with('success', 'Product added to cart!');
+        return back()->with('success', 'Product added to cart!');
     }
 
-
-    public function remove(Request $request, $id)
-    {
-        $user = Auth::user();
-
-        Cart::where('user_id', $user->id)
-            ->where('product_id', $id)
-            ->delete();
-
-        $cartCount = Cart::where('user_id', $user->id)->count();
-      
-    
-        return redirect()->back()->with('success', 'Product removed from cart!');
-    }
-
-     public function update(Request $request, $id)
+    public function update(Request $request, $id)
     {
         $request->validate([
             'quantity' => 'required|integer|min:0',
         ]);
 
         $user = Auth::user();
-
-        if (!$user) {
-            return redirect()->route('login')->with('warning', 'Please log in to update your cart.');
-        }
         $product = Product::find($id);
-        $quantity = (int) $request->input('quantity');
+
+        if (!$user || !$product) {
+            return response()->json(['error' => 'User or Product not found.'], 404);
+        }
+
+        $quantity = (int) $request->quantity;
 
         if ($quantity > $product->quantity) {
-            return redirect()->back()->with('warning', 'Requested quantity exceeds available stock.');
-        }
-
-        if ($quantity == 0) {
-            Cart::where('user_id', $user->id)
-                ->where('product_id', $id)
-                ->delete();
-
-            $message = 'Product removed from cart.';
-
-           
-            return redirect()->back()->with('success', $message);
+            return response()->json(['error' => 'Requested quantity exceeds available stock.'], 400);
         }
 
         $cartItem = Cart::where('user_id', $user->id)
             ->where('product_id', $id)
             ->first();
 
-        $cartItem->update(['quantity' => $quantity]);
+        if ($quantity == 0) {
+            $cartItem->delete();
+        } else {
+            $cartItem->update(['quantity' => $quantity]);
+        }
 
+        $cartTotal = Cart::with('product')
+            ->where('user_id', $user->id)
+            ->get()
+            ->sum(fn($item) => optional($item->product)->price * $item->quantity);
 
-        return redirect()->back()->with('success', 'Cart updated!');
+        return response()->json([
+            'success' => true,
+            'message' => 'Cart updated successfully.',
+            'cart_total' => $cartTotal,
+        ]);
+    }
+
+    public function remove(Request $request, $id)
+    {
+        $user = Auth::user();
+
+        $cartItem = Cart::where('user_id', $user->id)
+            ->where('product_id', $id)
+            ->first();
+
+        $cartItem->delete();
+
+        $cartTotal = Cart::with('product')
+            ->where('user_id', $user->id)
+            ->get()
+            ->sum(fn($item) => optional($item->product)->price * $item->quantity);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Product removed successfully.',
+            'cart_total' => $cartTotal,
+        ]);
     }
 }
