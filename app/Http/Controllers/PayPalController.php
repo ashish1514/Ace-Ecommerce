@@ -8,12 +8,14 @@ use App\Models\Order;
 use App\Models\Cart;
 use App\Models\OrderItem;
 use Illuminate\Support\Facades\Auth;
+use App\Models\PaymentSetting;
 use Srmklive\PayPal\Services\PayPal as PayPalClient;
 
 class PayPalController extends Controller
 {
     public function payWithPayPal(Request $request)
     {
+
         $request->validate([
             'product_ids'   => 'required|array',
             'product_ids.*' => 'required|exists:products,id',
@@ -55,8 +57,30 @@ class PayPalController extends Controller
 
         $totalValue = number_format($total, 2, '.', '');
 
+        $settings = PaymentSetting::first();
+
         $provider = new PayPalClient;
-        $provider->setApiCredentials(config('paypal'));
+
+        $provider->setApiCredentials([
+            'mode' => $settings->sandbox == 1 ? 'sandbox' : 'live',
+            'payment_action' => 'Sale',  
+            'currency' => 'USD',          
+            'notify_url' => '', 
+            'locale'          => 'en_US',
+            'validate_ssl'    => true, 
+            'sandbox' => [
+                'client_id'     => $settings->paypal_client_id,
+                'client_secret' => $settings->paypal_secret,
+                'app_id'        => '',
+            ],
+        
+            'live' => [
+                'client_id'     => $settings->paypal_client_id,
+                'client_secret' => $settings->paypal_secret,
+                'app_id'        => '',
+            ],
+        ]);
+        
         $provider->getAccessToken();
 
         $orderData = [

@@ -20,7 +20,6 @@
                                 $grandTotal += $subtotal;
                             @endphp
 
-                            <!-- Hidden fields used by both placeOrder (COD) and PayPal redirect -->
                             <input type="hidden" name="product_ids[]" value="{{ $product->id }}">
                             <input type="hidden" name="product_prices[{{ $product->id }}]" value="{{ $product->price }}">
                             <input type="hidden" name="product_names[{{ $product->id }}]" value="{{ $product->name }}">
@@ -36,7 +35,7 @@
                                     <h6 class="mb-1">{{ $product->name }}</h6>
                                     <p class="mb-1 text-muted">Price: ₹{{ number_format($product->price, 2) }}</p>
                                     <label class="small mb-1">Quantity:</label>
-                                    <input type="number" value="{{ $quantity }}" min="1" class="form-control form-control-sm w-50" readonly>
+                                    <input type="number" value="{{ $quantity }}" min="1" class="form-control form-control-sm w-50">
                                 </div>
                                 <div class="ms-3">
                                     <strong>₹{{ number_format($subtotal, 2) }}</strong>

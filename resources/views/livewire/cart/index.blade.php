@@ -149,9 +149,6 @@ $(function(){
         }
     });
 });
-
-
 });
 </script>
-
 @endsection
