@@ -356,3 +356,32 @@ Steps:-
 
 
 
+
+
+
+
+
+
+
+
+Today's Task
+Steps:-
+- Fetched PayPal API credentials (PAYPAL_CLIENT_ID and PAYPAL_SECRET) from the database.
+- Fixed and corrected issues in the PayPal controller.
+- Debugged the PayPal controller to ensure proper functionality.
+Status: Completed
+
+
+Today's Task
+Steps:-
+1. Research (R&D) on how to use PayPal secret keys.
+- Create a Provider.
+- Fetch PayPal secret keys from the database from the controller.
+- Fix existing errors in the code.
+- Create necessary models.
+- Create database migrations.
+- Research how to get data from the Provider.
+- Implement functionality to get PayPal secret keys.
+- Test and debug the code.
+- Implement functionality to use PayPal secret keys.
+- Fix issues.
