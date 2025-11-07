@@ -44,13 +44,13 @@
                         <td>
                             <div class="d-flex gap-2">
                                 @can('User Edit')
-                                    <a href="{{ route('users.edit', $user->id) }}" class="btn btn-sm btn-primary">
+                                    <a href="{{ route('users.edit', $user->id) }}" class="btn btn-primary btn-sm" >
                                         {{ __('Edit') }}
                                     </a>
                                 @endcan
                                 @if(auth()->id() !== $user->id)
                                     @can('User Delete')
-                                        <button onclick="confirmDelete({{ $user->id }}, '{{ $user->name }}')" class="btn btn-sm btn-danger">
+                                        <button onclick="confirmDelete({{ $user->id }}, '{{ $user->name }}')" class="btn  btn-danger btn-sm">
                                             {{ __('Delete') }}
                                         </button>
                                     @endcan

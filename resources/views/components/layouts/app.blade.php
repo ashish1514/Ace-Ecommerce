@@ -1,7 +1,5 @@
-      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-              <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-
-      
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
    <x-layouts.app.sidebar :title="$title ?? null">
         <x-layouts.app.header :title="$title ?? null" dtadd="true" />
         <flux:main>
